@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.440.0 - 2026-11-15
+
+**The general deep dive, and the design deep dive built on it** (the owner, 11-15: Exchange's search was "meant to
+deep dive any query in a general sense", and OpenVibe.Design's design deep dive uses it as its core).
+- New `ai.research@1` (`contracts/ai/research.v1.json`, owner ai, public): the report of OpenVibe.AI's workflow
+  `research.deep_dive`. The plan's questions, every source found, every page chosen and read as text (or why it
+  could not be read), the notes on each page (what it says, short exact quotes, the kind of source), and the answer:
+  a summary, key points, an answer per question with its confidence, a comparison, where the sources disagree, what
+  is open and the next steps. Every claim cites the pages it rests on by source id. The receipt lists every model
+  call and the pages read.
+- `ai.deep-dive@1` 1.1.0 (backward compatible): a `read` step (the design dive reading the best write-ups through the
+  general core) and an optional `research` block with the same questions, pages read and answer as `ai.research@1`.
+  `ai.deep_dive.updated@1` 1.1.0: its step and steps may name `read`.
+
 ## 0.439.0 - 2026-11-15
 
 **Agents make tools for people** (plan 2026-11-13 §AD.12; the owner, 11-15: "use codes or actor to create a tool for

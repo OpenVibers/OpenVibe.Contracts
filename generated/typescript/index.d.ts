@@ -345275,7 +345275,7 @@ export interface LiveElementStatePayload {
   updated_at: string;
 }
 
-/** ai.deep-dive@1.0.0 (owner: ai) */
+/** ai.deep-dive@1.1.0 (owner: ai) */
 /**
  * A deep dive: expert design research run by OpenVibe.AI (workflow design.deep_dive) for OpenVibe.Exchange's /deep-dive page and, through the API, OpenVibe.Design. One document holds the question and depth (the input), the seven steps, every source read, every capture (a private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the synthesis across sites, the recommendations checked against OpenVibe's own rules, and the receipt of every model call and capture. Every claim carries its evidence: the site, the capture or crop, the URL and the date it was read. Nothing is copied: captures are private to the run's owner and the report shows them as attributed commentary.
  */
@@ -345299,7 +345299,7 @@ export interface AiDeepDive {
     sites?: string[];
   };
   steps: {
-    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    key: "plan" | "search" | "read" | "choose" | "capture" | "analyse" | "synthesise" | "report";
     status: "pending" | "running" | "done" | "skipped" | "failed";
     detail?: string | null;
     started_at?: string | null;
@@ -346275,7 +346275,13478 @@ export interface AiDeepDive {
     captures_count: number;
     synthetic: boolean;
     models: {
-      step: "plan" | "choose" | "analyse" | "synthesise";
+      step: "plan" | "read" | "choose" | "analyse" | "synthesise";
+      provider: string | null;
+      model: string | null;
+      tokens_in: number;
+      tokens_out: number;
+      cost_usd: number;
+      ms: number;
+    }[];
+  };
+  /**
+   * @maxItems 40
+   */
+  gaps: string[];
+  created_at: string;
+  updated_at: string;
+  finished_at?: string | null;
+  /**
+   * Optional (AI deep-dive-research, 11-15): the general deep dive this design dive is built on, its "read" step. The questions its plan wrote, the write-ups it read as text with their notes, and the answer, with citations by source id (the same shapes as ai.research@1).
+   */
+  research?: {
+    /**
+     * @maxItems 12
+     */
+    questions:
+      | []
+      | [
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ]
+      | [
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          },
+          {
+            key: string;
+            question: string;
+          }
+        ];
+    /**
+     * @maxItems 40
+     */
+    reads: {
+      id: string;
+      source_id: string;
+      url: string;
+      final_url?: string | null;
+      title?: string | null;
+      site?: string | null;
+      published?: string | null;
+      read_at: string;
+      words?: number;
+      status: "read" | "skipped";
+      reason?: string | null;
+      relevant?: boolean | null;
+      summary?: string | null;
+      kind?: "primary" | "reference" | "news" | "opinion" | "vendor" | "forum" | "other" | null;
+      /**
+       * @maxItems 10
+       */
+      findings?:
+        | []
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ]
+        | [
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            },
+            {
+              point: string;
+              quote?: string | null;
+            }
+          ];
+    }[];
+    answer: {
+      summary: string;
+      /**
+       * @maxItems 12
+       */
+      key_points:
+        | []
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              text: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ];
+      /**
+       * @maxItems 12
+       */
+      answers:
+        | []
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              question: string;
+              answer: string;
+              confidence: "high" | "medium" | "low";
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ];
+      comparison: {
+        /**
+         * @maxItems 8
+         */
+        columns:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string];
+        /**
+         * @maxItems 20
+         */
+        rows:
+          | []
+          | [
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ]
+          | [
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              ),
+              (
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+              )
+            ];
+      } | null;
+      /**
+       * @maxItems 10
+       */
+      disagreements:
+        | []
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ]
+        | [
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            },
+            {
+              what: string;
+              /**
+               * @maxItems 8
+               */
+              sources:
+                | []
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string];
+            }
+          ];
+      /**
+       * @maxItems 10
+       */
+      open_questions:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string];
+      /**
+       * @maxItems 10
+       */
+      next_steps:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string];
+    };
+  };
+}
+
+/** ai.research@1.0.0 (owner: ai) */
+/**
+ * ai.research v1 (OpenVibe.AI workflow research.deep_dive, server/deep-dive/research.js): the general deep dive's report. Any question, researched the way an expert would: the plan's questions, every source the searches found, every page chosen and read as text (or why it could not be), the notes on each page (what it says, short exact quotes, what kind of source it is), and the answer, where every claim cites the pages it rests on by source id: a summary, key points, an answer per question with its confidence, a comparison when the question compares, where the sources disagree, what is still open and the next steps. The receipt lists every model call. OpenVibe.Exchange shows it (/deep-dive); OpenVibe.Design's design deep dive carries the same research block (ai.deep-dive@1 research).
+ */
+export interface AiResearch {
+  id: string;
+  schema: "ai.research@1";
+  run_id: string;
+  status: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  input: {
+    question: string;
+    depth: "quick" | "thorough" | "expert";
+    max_pages: number;
+    /**
+     * @maxItems 30
+     */
+    sites?: string[];
+  };
+  /**
+   * @maxItems 6
+   */
+  steps:
+    | []
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ]
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ]
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ]
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ]
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ]
+    | [
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        },
+        {
+          key: "plan" | "search" | "choose" | "read" | "analyse" | "write";
+          status: "pending" | "running" | "done" | "skipped" | "failed";
+          detail?: string | null;
+          started_at?: string | null;
+          finished_at?: string | null;
+        }
+      ];
+  /**
+   * @maxItems 12
+   */
+  questions:
+    | []
+    | [
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        },
+        {
+          key: string;
+          question: string;
+        }
+      ];
+  /**
+   * @maxItems 200
+   */
+  sources: {
+    id: string;
+    kind: "web" | "picture" | "icon" | "project" | "rules" | "component" | "named";
+    title: string;
+    url: string;
+    publisher?: string | null;
+    engine?: string | null;
+    snippet?: string | null;
+    license?: string | null;
+    read_at: string;
+  }[];
+  /**
+   * @maxItems 40
+   */
+  reads: {
+    id: string;
+    source_id: string;
+    url: string;
+    final_url?: string | null;
+    title?: string | null;
+    site?: string | null;
+    published?: string | null;
+    read_at: string;
+    words?: number;
+    status: "read" | "skipped";
+    reason?: string | null;
+    relevant?: boolean | null;
+    summary?: string | null;
+    kind?: "primary" | "reference" | "news" | "opinion" | "vendor" | "forum" | "other" | null;
+    /**
+     * @maxItems 10
+     */
+    findings?:
+      | []
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ]
+      | [
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          },
+          {
+            point: string;
+            quote?: string | null;
+          }
+        ];
+  }[];
+  answer: {
+    summary: string;
+    /**
+     * @maxItems 12
+     */
+    key_points:
+      | []
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            text: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ];
+    /**
+     * @maxItems 12
+     */
+    answers:
+      | []
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            question: string;
+            answer: string;
+            confidence: "high" | "medium" | "low";
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ];
+    comparison: {
+      /**
+       * @maxItems 8
+       */
+      columns:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+      /**
+       * @maxItems 20
+       */
+      rows:
+        | []
+        | [
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ]
+        | [
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            ),
+            (
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+            )
+          ];
+    } | null;
+    /**
+     * @maxItems 10
+     */
+    disagreements:
+      | []
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          },
+          {
+            what: string;
+            /**
+             * @maxItems 8
+             */
+            sources:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string];
+          }
+        ];
+    /**
+     * @maxItems 10
+     */
+    open_questions:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string];
+    /**
+     * @maxItems 10
+     */
+    next_steps:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string];
+  };
+  receipt: {
+    price_usd: number;
+    held_usd: number;
+    cost_usd: number;
+    pages_read: number;
+    synthetic: boolean;
+    /**
+     * @maxItems 200
+     */
+    models: {
+      step: "plan" | "choose" | "analyse" | "write";
       provider: string | null;
       model: string | null;
       tokens_in: number;
@@ -346293,7 +359764,7 @@ export interface AiDeepDive {
   finished_at?: string | null;
 }
 
-/** ai.deep_dive.updated@1.0.0 (owner: ai) */
+/** ai.deep_dive.updated@1.1.0 (owner: ai) */
 /**
  * ai.deep_dive.updated v1 (OpenVibe.AI server/deep-dive): a deep dive's step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Exchange's /deep-dive) can follow a run without polling, and OpenVibe.Design can attach a finished report. The payload carries the run and deep-dive ids, the step, the progress and the status; never the question's answer, a capture or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.
  */
@@ -346301,10 +359772,10 @@ export interface AiDeepDiveUpdatedPayload {
   deep_dive_id: string;
   run_id: string;
   status: "queued" | "running" | "choosing" | "succeeded" | "failed" | "cancelled";
-  step: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report" | "done" | null;
+  step: "plan" | "search" | "read" | "choose" | "capture" | "analyse" | "synthesise" | "report" | "done" | null;
   progress: number;
   steps: {
-    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    key: "plan" | "search" | "read" | "choose" | "capture" | "analyse" | "synthesise" | "report";
     status: "pending" | "running" | "done" | "skipped" | "failed";
   }[];
   depth: "quick" | "thorough" | "expert";

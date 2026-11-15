@@ -1,0 +1,238 @@
+{
+  "id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "schema": "ai.research@1",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "succeeded",
+  "input": {
+    "question": "Are heat pumps worth it in a cold climate?",
+    "depth": "quick",
+    "max_pages": 8
+  },
+  "steps": [
+    {
+      "key": "plan",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "key": "search",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "key": "choose",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "key": "read",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "key": "analyse",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "key": "write",
+      "status": "done",
+      "detail": null,
+      "started_at": "2026-11-15T22:00:10.000Z",
+      "finished_at": "2026-11-15T22:00:10.000Z"
+    }
+  ],
+  "questions": [
+    {
+      "key": "cold",
+      "question": "How efficient are they in the cold?"
+    },
+    {
+      "key": "cost",
+      "question": "What do they cost to run?"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src_1",
+      "kind": "web",
+      "title": "Heat pumps, part 1",
+      "url": "https://example.org/heat-pumps-1",
+      "publisher": "example.org",
+      "engine": "openvibe",
+      "snippet": null,
+      "license": null,
+      "read_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "id": "src_2",
+      "kind": "web",
+      "title": "Heat pumps, part 2",
+      "url": "https://example.org/heat-pumps-2",
+      "publisher": "example.org",
+      "engine": "openvibe",
+      "snippet": null,
+      "license": null,
+      "read_at": "2026-11-15T22:00:10.000Z"
+    },
+    {
+      "id": "src_3",
+      "kind": "web",
+      "title": "Heat pumps, part 3",
+      "url": "https://example.org/heat-pumps-3",
+      "publisher": "example.org",
+      "engine": "openvibe",
+      "snippet": null,
+      "license": null,
+      "read_at": "2026-11-15T22:00:10.000Z"
+    }
+  ],
+  "reads": [
+    {
+      "id": "read_1",
+      "source_id": "src_1",
+      "url": "https://example.org/heat-pumps-1",
+      "final_url": "https://example.org/heat-pumps-1",
+      "title": "Heat pumps, part 1",
+      "site": "Example",
+      "published": "2026-03-01",
+      "read_at": "2026-11-15T22:00:10.000Z",
+      "words": 1200,
+      "status": "read",
+      "reason": null,
+      "relevant": true,
+      "summary": "How a heat pump moves heat, and how well it does in the cold.",
+      "kind": "reference",
+      "findings": [
+        {
+          "point": "Efficiency drops below -15 C but stays above 1.",
+          "quote": "a COP of 1.8 at -20 C"
+        }
+      ]
+    },
+    {
+      "id": "read_2",
+      "source_id": "src_2",
+      "url": "https://example.org/heat-pumps-2",
+      "final_url": "https://example.org/heat-pumps-2",
+      "title": "Heat pumps, part 2",
+      "site": "Example",
+      "published": "2026-03-01",
+      "read_at": "2026-11-15T22:00:10.000Z",
+      "words": 1200,
+      "status": "read",
+      "reason": null,
+      "relevant": true,
+      "summary": "How a heat pump moves heat, and how well it does in the cold.",
+      "kind": "news",
+      "findings": [
+        {
+          "point": "Efficiency drops below -15 C but stays above 1.",
+          "quote": "a COP of 1.8 at -20 C"
+        }
+      ]
+    },
+    {
+      "id": "read_3",
+      "source_id": "src_3",
+      "url": "https://example.org/heat-pumps-3",
+      "final_url": null,
+      "title": "Heat pumps, part 3",
+      "site": "Example",
+      "published": null,
+      "read_at": "2026-11-15T22:00:10.000Z",
+      "words": 0,
+      "status": "skipped",
+      "reason": "robots.txt disallows this page",
+      "relevant": null,
+      "summary": null,
+      "kind": null,
+      "findings": []
+    }
+  ],
+  "answer": {
+    "summary": "Yes, in most cold climates: modern heat pumps keep working well below freezing.",
+    "key_points": [
+      {
+        "text": "They keep a COP above 1 at -20 C.",
+        "sources": [
+          "src_1"
+        ]
+      }
+    ],
+    "answers": [
+      {
+        "question": "How efficient are they in the cold?",
+        "answer": "Less efficient, still better than resistance heat.",
+        "confidence": "high",
+        "sources": [
+          "src_1"
+        ]
+      }
+    ],
+    "comparison": {
+      "columns": [
+        "Option",
+        "Cost"
+      ],
+      "rows": [
+        [
+          "Heat pump",
+          "$$"
+        ],
+        [
+          "Gas",
+          "$"
+        ]
+      ]
+    },
+    "disagreements": [
+      {
+        "what": "How much grants cover.",
+        "sources": [
+          "src_2"
+        ]
+      }
+    ],
+    "open_questions": [
+      "Long-term reliability at -30 C."
+    ],
+    "next_steps": [
+      "Get two quotes."
+    ]
+  },
+  "receipt": {
+    "price_usd": 0.1,
+    "held_usd": 0.1,
+    "cost_usd": 0.0123,
+    "pages_read": 2,
+    "synthetic": false,
+    "models": [
+      {
+        "step": "plan",
+        "provider": "deepseek",
+        "model": "deepseek-v4-flash",
+        "tokens_in": 900,
+        "tokens_out": 300,
+        "cost_usd": 0.001,
+        "ms": 900
+      }
+    ]
+  },
+  "gaps": [
+    "example.org: robots.txt disallows this page"
+  ],
+  "created_at": "2026-11-15T22:00:00.000Z",
+  "updated_at": "2026-11-15T22:01:10.000Z",
+  "finished_at": "2026-11-15T22:01:10.000Z"
+}
