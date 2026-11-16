@@ -46,6 +46,27 @@
     {
       "type": "object",
       "additionalProperties": false,
+      "description": "Server to device (2026-11-16): what the person typed to a running interactive job, written to its stdin as it is; eof closes the stdin afterwards. An agent's own sign-in reads the code its sign-in page shows this way. Input for a job that is not running, or whose entry is not interactive, is dropped.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_stdin" },
+        "id": { "$ref": "#/$defs/job_id" },
+        "data": { "type": "string", "maxLength": 4096 },
+        "eof": { "type": "boolean" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
       "description": "Server to device: every usage reading of this job is recorded (written or replayed by Billing), so the worker may forget it and stops resending its `job_exit`.",
       "required": [
         "v",

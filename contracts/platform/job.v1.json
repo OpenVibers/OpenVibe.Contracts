@@ -120,6 +120,11 @@
           }
         }
       }
+    },
+    "sandbox": {
+      "type": "string",
+      "pattern": "^sbx_[a-z0-9]{8,64}$",
+      "description": "The person's own persistent sandbox on the machine (2026-11-16): an opaque id the dispatcher derives from the person and the machine, so the machine keeps that person's installed agents and sign-ins without learning who they are. Absent for the machine owner's own job, whose sandbox is the owner's. A Link mounts it read-write at /sandbox for an entry that keeps one (OpenVibe.Link v0.72.0 docs/worker.md)."
     }
   },
   "allOf": [

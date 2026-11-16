@@ -7052,7 +7052,7 @@
     },
     {
       "id": "platform.job",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/job.v1.json",
       "visibility": "public",
@@ -7062,7 +7062,7 @@
     },
     {
       "id": "platform.job-frame",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/job-frame.v1.json",
       "visibility": "public",

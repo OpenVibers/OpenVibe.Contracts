@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.442.0 - 2026-11-16
+
+**A person's own sandbox on every machine, and jobs that take what the person types** (the owner, 11-16: "that shit
+should install when the user goes to use openvibe.computer or openvibe.link … their sandbox"; the agents' sign-ins done
+"in the user interface").
+- `platform.job@1` 1.1.0 (backward compatible): optional `sandbox`, the person's persistent sandbox on the machine. It
+  is an opaque id (`sbx_` and 8 to 64 of a-z, 0-9) the dispatcher derives from the person and the machine; absent, the
+  job is the machine owner's own. OpenVibe.Link v0.72.0 mounts it read-write at `/sandbox`.
+- `platform.job-frame@1` 1.1.0: `job_stdin { id, data ≤ 4096, eof }`, server to device. It is what the person typed to
+  a running interactive job: an agent's own sign-in reads the code its sign-in page shows.
+- Fixtures: a job with a sandbox, an id that is not the dispatcher's (invalid), and job_stdin with data and with eof.
+
 ## 0.441.0 - 2026-11-15
 
 **The design deep dive reads image search a page at a time, and every part of it is configurable** (the owner,
