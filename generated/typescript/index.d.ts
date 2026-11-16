@@ -219135,7 +219135,7 @@ export interface HarnessOffer {
  */
 export type RuntimeClass = ("function" | "code" | "browser" | "linux" | "desktop" | "gpu") & string;
 
-/** platform.job@1.0.0 (owner: network) */
+/** platform.job@1.1.0 (owner: network) */
 /**
  * platform.job@1: one unit of work a dispatcher (OpenVibe.Bot now, Fabric later) hands to an execution worker (plan T14 Run; ADR-034 proposed). It rides the device control link inside a `job` frame (platform.job-frame@1). The worker answers it with `ack` (accepted) or `nack` (refused: an unknown or unimplemented class, a missing artifact, limits it cannot honor, the local kill switch), then runs it at most once. Metering: a running `function` job is billed by wall-clock second as platform.usage-sample@1 readings; platform.job-frame@1 `job_usage` gives the mapping.
  */
@@ -219197,9 +219197,13 @@ export type Job = {
     sha256: string;
     size_bytes?: number;
   }[];
+  /**
+   * The person's own persistent sandbox on the machine (2026-11-16): an opaque id the dispatcher derives from the person and the machine, so the machine keeps that person's installed agents and sign-ins without learning who they are. Absent for the machine owner's own job, whose sandbox is the owner's. A Link mounts it read-write at /sandbox for an entry that keeps one (OpenVibe.Link v0.72.0 docs/worker.md).
+   */
+  sandbox?: string;
 };
 
-/** platform.job-frame@1.0.0 (owner: network) */
+/** platform.job-frame@1.1.0 (owner: network) */
 /**
  * platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe Link's WebSocket to OpenVibe.Bot (Link docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.
  */
@@ -219326,6 +219330,18 @@ export type JobFrame =
          */
         mem_peak_bytes?: number;
       };
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_stdin";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      data?: string;
+      eof?: boolean;
     };
 
 /** platform.task@1.0.0 (owner: network) */
