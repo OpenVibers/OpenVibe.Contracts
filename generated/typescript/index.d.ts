@@ -345275,7 +345275,7 @@ export interface LiveElementStatePayload {
   updated_at: string;
 }
 
-/** ai.deep-dive@1.1.0 (owner: ai) */
+/** ai.deep-dive@1.2.0 (owner: ai) */
 /**
  * A deep dive: expert design research run by OpenVibe.AI (workflow design.deep_dive) for OpenVibe.Exchange's /deep-dive page and, through the API, OpenVibe.Design. One document holds the question and depth (the input), the seven steps, every source read, every capture (a private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the synthesis across sites, the recommendations checked against OpenVibe's own rules, and the receipt of every model call and capture. Every claim carries its evidence: the site, the capture or crop, the URL and the date it was read. Nothing is copied: captures are private to the run's owner and the report shows them as attributed commentary.
  */
@@ -345297,6 +345297,47 @@ export interface AiDeepDive {
      * @maxItems 30
      */
     sites?: string[];
+    /**
+     * Optional (1.2.0): what the person chose; every option has the depth's default.
+     */
+    options?: {
+      /**
+       * @minItems 1
+       * @maxItems 2
+       */
+      viewports?: [390 | 1280] | [390 | 1280, 390 | 1280];
+      /**
+       * @minItems 1
+       * @maxItems 2
+       */
+      themes?: ["light" | "dark"] | ["light" | "dark", "light" | "dark"];
+      sites?: number;
+      writeups?: number;
+      extras?: boolean;
+      images?: {
+        enabled?: boolean;
+        /**
+         * @maxItems 4
+         */
+        queries?: [] | [string] | [string, string] | [string, string, string] | [string, string, string, string];
+        /**
+         * @maxItems 8
+         */
+        engines?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string];
+        recency?: "any" | "day" | "week" | "month" | "year";
+        per_sheet?: number;
+        sheets?: number;
+      };
+    };
   };
   steps: {
     key: "plan" | "search" | "read" | "choose" | "capture" | "analyse" | "synthesise" | "report";
@@ -346275,7 +346316,7 @@ export interface AiDeepDive {
     captures_count: number;
     synthetic: boolean;
     models: {
-      step: "plan" | "read" | "choose" | "analyse" | "synthesise";
+      step: "plan" | "read" | "choose" | "analyse" | "synthesise" | "images";
       provider: string | null;
       model: string | null;
       tokens_in: number;
@@ -352917,6 +352958,2513 @@ export interface AiDeepDive {
         | [string, string, string, string, string, string, string, string, string, string];
     };
   };
+  /**
+   * Optional (1.2.0, 11-15): image search a page at a time. Each sheet is one engine's page of results for a query at a recency, laid out as one image (a private Media object of the run's owner) and read whole by a vision model: the reading, recurring patterns, palettes, styles and outliers, with the images' own pages.
+   *
+   * @maxItems 8
+   */
+  image_sheets?:
+    | []
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ]
+    | [
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        },
+        {
+          id: string;
+          media_id: string;
+          query: string;
+          engine: string;
+          recency: "any" | "day" | "week" | "month" | "year";
+          count: number;
+          width?: number | null;
+          height?: number | null;
+          /**
+           * @maxItems 60
+           */
+          sources?: {
+            url?: string | null;
+            page?: string | null;
+            title?: string | null;
+          }[];
+          reading?: string | null;
+          /**
+           * @maxItems 8
+           */
+          patterns?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          palette?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 8
+           */
+          styles?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string];
+          /**
+           * @maxItems 6
+           */
+          outliers?:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string];
+        }
+      ];
 }
 
 /** ai.research@1.0.0 (owner: ai) */

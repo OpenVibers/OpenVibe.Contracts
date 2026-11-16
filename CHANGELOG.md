@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.441.0 - 2026-11-15
+
+**The design deep dive reads image search a page at a time, and every part of it is configurable** (the owner,
+11-15: "screenshot search queries on Google, Bing, etc to analyze a whole page of images at once … filter for recent
+results … fully configurable").
+- `ai.deep-dive@1` 1.2.0 (backward compatible): optional `image_sheets`, each one engine's page of image results for
+  a query at a recency, laid out as one sheet (a private Media object) and read whole: the reading, patterns,
+  palettes, styles and outliers, with the images' own pages. The receipt's model steps may name `images`. The
+  input may carry `options`: viewports, themes, sites, write-ups, Expert extras, and image search (on or off,
+  queries, engines, recency, page size, sheets).
+
 ## 0.440.0 - 2026-11-15
 
 **The general deep dive, and the design deep dive built on it** (the owner, 11-15: Exchange's search was "meant to

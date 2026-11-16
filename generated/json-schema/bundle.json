@@ -136849,7 +136849,7 @@
       }
     },
     "ai.deep-dive": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -136934,6 +136934,96 @@
                   "pattern": "^https?://"
                 },
                 "description": "Sites the person named when starting the run."
+              },
+              "options": {
+                "description": "Optional (1.2.0): what the person chose; every option has the depth's default.",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "viewports": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        390,
+                        1280
+                      ]
+                    }
+                  },
+                  "themes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "light",
+                        "dark"
+                      ]
+                    }
+                  },
+                  "sites": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 30
+                  },
+                  "writeups": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 12
+                  },
+                  "extras": {
+                    "type": "boolean"
+                  },
+                  "images": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "queries": {
+                        "type": "array",
+                        "maxItems": 4,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      },
+                      "engines": {
+                        "type": "array",
+                        "maxItems": 8,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 40,
+                          "pattern": "^[a-z0-9-]+$"
+                        }
+                      },
+                      "recency": {
+                        "enum": [
+                          "any",
+                          "day",
+                          "week",
+                          "month",
+                          "year"
+                        ]
+                      },
+                      "per_sheet": {
+                        "type": "integer",
+                        "minimum": 8,
+                        "maximum": 60
+                      },
+                      "sheets": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    }
+                  }
+                }
               }
             }
           },
@@ -137666,7 +137756,8 @@
                         "read",
                         "choose",
                         "analyse",
-                        "synthesise"
+                        "synthesise",
+                        "images"
                       ]
                     },
                     "provider": {
@@ -138042,6 +138133,139 @@
                       "type": "string",
                       "maxLength": 400
                     }
+                  }
+                }
+              }
+            }
+          },
+          "image_sheets": {
+            "description": "Optional (1.2.0, 11-15): image search a page at a time. Each sheet is one engine's page of results for a query at a recency, laid out as one image (a private Media object of the run's owner) and read whole by a vision model: the reading, recurring patterns, palettes, styles and outliers, with the images' own pages.",
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "media_id",
+                "query",
+                "engine",
+                "recency",
+                "count"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "media_id": {
+                  "type": "string",
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "query": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "engine": {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                "recency": {
+                  "enum": [
+                    "any",
+                    "day",
+                    "week",
+                    "month",
+                    "year"
+                  ]
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                },
+                "width": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "height": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "sources": {
+                  "type": "array",
+                  "maxItems": 60,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "url": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 2048
+                      },
+                      "page": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 2048
+                      },
+                      "title": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 160
+                      }
+                    }
+                  }
+                },
+                "reading": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 1500
+                },
+                "patterns": {
+                  "type": "array",
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 300
+                  }
+                },
+                "palette": {
+                  "type": "array",
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                },
+                "styles": {
+                  "type": "array",
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "outliers": {
+                  "type": "array",
+                  "maxItems": 6,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 300
                   }
                 }
               }
