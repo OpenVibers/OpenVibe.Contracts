@@ -13,7 +13,8 @@ for (const name of names) {
     const entry = contracts.resolve(`${id}@1`);
     assert.strictEqual(entry.visibility, 'public');
     checks++;
-    assert.strictEqual(entry.version, '1.0.0');
+    // Additive changes move a v1 contract within 1.x (platform.job@1 and job-frame@1 1.1.0: sandbox, job_stdin, 0.442.0).
+    assert.ok(/^1\.\d+\.\d+$/.test(entry.version), `${id}: ${entry.version} is a v1`);
     checks++;
     assert.strictEqual(entry.adr, 'ADR-034');
     checks++;
