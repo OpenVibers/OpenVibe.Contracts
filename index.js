@@ -9,6 +9,7 @@
  *   contracts.capabilities.check(tokenClaims, 'media.object.read', { namespace: 'live' });
  *   contracts.staff.can(userTokenClaims, 'staff.moderation.chat');  // staff roles → staff capabilities
  *   contracts.resources.parse('ovrn:media:prj_…:object/med_…');       // { service, project_id, type, id }
+ *   contracts.systemMap.reposFor('the menu shows a label twice');      // { picks: [{ name, repository, why }] }
  */
 const registry = require('./lib/registry');
 
@@ -34,4 +35,5 @@ module.exports = {
     labels: require('./lib/labels'),
     moneyReasons: require('./lib/money-reasons'),
     openapi: require('./lib/openapi'),
+    systemMap: require('./lib/system-map'),
 };

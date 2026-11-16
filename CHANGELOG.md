@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.443.0 - 2026-11-16
+
+**The system map: every agent knows the network** (the owner, 11-16: Codes, Actor, Computer and every agent should
+know "all the different repositories and how they're interconnected and modular … the SDK and API … which repositories
+it needs").
+- `systemMap` (`lib/system-map.js`, exported as `contracts.systemMap`) reads the service and repository manifests as
+  one map:
+  - `systemMap()`: every service, with its repository, site, origin, health, capabilities and events;
+  - every repository, and the three libraries (Shared, SDK, Contracts);
+  - the spine (sign-in, money, media, events, AI, agents, libraries).
+- `reposFor(task)` picks the repositories a task needs, best first, each with why. It weighs, in order:
+  - a service's name or domain in the task;
+  - a word that is a service's job (`CONCEPTS`: "tokens" → AI, "rank" and "notifications" → Network, "camera" → Cam);
+  - the service's own description and capabilities;
+  - a library's language ("navbar", "menu", "glyph" → Shared).
+- `markdown(task)` is the brief an agent reads first. OpenVibe.Codes writes it into every OpenVibe coding job as
+  `.openvibe/OPENVIBE.md` (OpenVibe.Codes#528).
+- Domains come only from the service manifests, which are what is deployed. Internal origins appear only with
+  `{ internal: true }`.
+- Docs: `docs/system-map.md`. Test: `system-map.test.js`, built from the owner's own asks of 11-16.
+
 ## 0.442.0 - 2026-11-16
 
 **A person's own sandbox on every machine, and jobs that take what the person types** (the owner, 11-16: "that shit
