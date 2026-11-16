@@ -219229,18 +219229,6 @@ export type JobFrame =
       v: 1;
       seq: number;
       ts: number;
-      type: "job_stdin";
-      /**
-       * platform.job@1 `id`
-       */
-      id: string;
-      data?: string;
-      eof?: boolean;
-    }
-  | {
-      v: 1;
-      seq: number;
-      ts: number;
       type: "job_exit_ack";
       /**
        * platform.job@1 `id`
@@ -219342,6 +219330,18 @@ export type JobFrame =
          */
         mem_peak_bytes?: number;
       };
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_stdin";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      data?: string;
+      eof?: boolean;
     };
 
 /** platform.task@1.0.0 (owner: network) */
