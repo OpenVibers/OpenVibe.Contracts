@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.444.0 - 2026-11-17
+
+**An answer's receipt** (plan §AD.17, "one agent system that always finds a way": every answer says how it ran).
+- **`agents.step@1` 1.3.0**, optional fields only:
+  - `cost.by`: what paid for the entry, by rung of the Dispatcher's ladder, the same shape as `agents.run@1`'s
+    `cost.by` (machine, plan, key, allowance, credits). On a turn's answer a product may put the whole turn's spend
+    there, so the answer carries its receipt;
+  - `model`: the model that wrote the entry (`id`, `name`, `provider`), for a swap mid-session or a fall back to the
+    person's own key, where the run's `model` no longer says it.
+- Fixtures: an answer with its receipt; a receipt on an unknown rung and a model without an id are refused.
+
 ## 0.443.0 - 2026-11-16
 
 **The system map: every agent knows the network** (the owner, 11-16: Codes, Actor, Computer and every agent should

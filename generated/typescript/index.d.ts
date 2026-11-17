@@ -370275,7 +370275,7 @@ export interface AgentsRun {
   };
 }
 
-/** agents.step@1.2.0 (owner: actor) */
+/** agents.step@1.3.0 (owner: actor) */
 /**
  * agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional. Since 1.2.0 a step says the TURN it belongs to.
  */
@@ -370313,13 +370313,51 @@ export interface AgentsStep {
    */
   result?: string | {} | unknown[] | number | boolean | null;
   /**
-   * What this step spent, when the product meters per step. Null when it meters per run only.
+   * What this step spent, when the product meters per step. Null when it meters per run only. On a turn's answer (from agent, kind message), a product may put the whole turn's spend here, with BY, as the answer's receipt.
    */
   cost?: {
     usd?: number;
     tokens?: number;
     seconds?: number;
+    /**
+     * What paid for this entry, by rung of the Dispatcher's ladder, as agents.run@1's COST.BY: MACHINE (a model on the person's own computer), PLAN (a signed-in plan through its harness), KEY (the person's own provider key), ALLOWANCE (OpenVibe's free allowance), CREDITS (bought). An answer's receipt: the parts add up to the step's own totals. 1.3.0.
+     */
+    by?: {
+      machine?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      plan?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      key?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      allowance?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      credits?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+    };
   } | null;
+  /**
+   * The model that wrote this entry, when the product knows it: the run's own (agents.run@1's MODEL) or another (a swap mid-session, a fall back to the person's own key). ID is the provider's model id; NAME is what a person reads; PROVIDER is whose it is (anthropic, deepseek, openai, the person's computer: machine). 1.3.0.
+   */
+  model?: {
+    id: string;
+    name?: string;
+    provider?: string;
+  };
   started_at: string;
   /**
    * When the step ended, when the product records an end. A product that logs a point event sets it to the event's time; null when the step is still open.
@@ -374248,13 +374286,51 @@ export interface AgentsStepAppendedPayload {
    */
   result?: string | {} | unknown[] | number | boolean | null;
   /**
-   * What this step spent, when the product meters per step. Null when it meters per run only.
+   * What this step spent, when the product meters per step. Null when it meters per run only. On a turn's answer (from agent, kind message), a product may put the whole turn's spend here, with BY, as the answer's receipt.
    */
   cost?: {
     usd?: number;
     tokens?: number;
     seconds?: number;
+    /**
+     * What paid for this entry, by rung of the Dispatcher's ladder, as agents.run@1's COST.BY: MACHINE (a model on the person's own computer), PLAN (a signed-in plan through its harness), KEY (the person's own provider key), ALLOWANCE (OpenVibe's free allowance), CREDITS (bought). An answer's receipt: the parts add up to the step's own totals. 1.3.0.
+     */
+    by?: {
+      machine?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      plan?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      key?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      allowance?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      credits?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+    };
   } | null;
+  /**
+   * The model that wrote this entry, when the product knows it: the run's own (agents.run@1's MODEL) or another (a swap mid-session, a fall back to the person's own key). ID is the provider's model id; NAME is what a person reads; PROVIDER is whose it is (anthropic, deepseek, openai, the person's computer: machine). 1.3.0.
+   */
+  model?: {
+    id: string;
+    name?: string;
+    provider?: string;
+  };
   started_at: string;
   /**
    * When the step ended, when the product records an end. A product that logs a point event sets it to the event's time; null when the step is still open.
