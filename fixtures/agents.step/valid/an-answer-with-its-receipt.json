@@ -1,0 +1,33 @@
+{
+  "run_id": "tsk_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "seq": 18,
+  "kind": "message",
+  "from": "agent",
+  "turn": 1,
+  "text": "Three rentals under $0.40 an hour: Vast, RunPod and TensorDock. The cheapest 4090 today is on Vast.",
+  "cost": {
+    "usd": 0.0042,
+    "tokens": 6120,
+    "seconds": 21.4,
+    "by": {
+      "allowance": {
+        "tokens": 4100,
+        "usd": 0,
+        "seconds": 9.8
+      },
+      "key": {
+        "tokens": 2020,
+        "usd": 0.0042,
+        "seconds": 11.6
+      }
+    }
+  },
+  "model": {
+    "id": "claude-sonnet-5-5",
+    "name": "Claude Sonnet 5.5",
+    "provider": "anthropic"
+  },
+  "started_at": "2026-11-17T05:10:02Z",
+  "ended_at": "2026-11-17T05:10:23Z",
+  "child_run": null
+}

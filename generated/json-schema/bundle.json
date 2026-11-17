@@ -141147,7 +141147,7 @@
       }
     },
     "agents.step": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "owner": "actor",
       "status": "active",
       "schema": {
@@ -141232,7 +141232,7 @@
               "null"
             ],
             "additionalProperties": false,
-            "description": "What this step spent, when the product meters per step. Null when it meters per run only.",
+            "description": "What this step spent, when the product meters per step. Null when it meters per run only. On a turn's answer (from agent, kind message), a product may put the whole turn's spend here, with BY, as the answer's receipt.",
             "properties": {
               "usd": {
                 "type": "number",
@@ -141245,6 +141245,127 @@
               "seconds": {
                 "type": "number",
                 "minimum": 0
+              },
+              "by": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "What paid for this entry, by rung of the Dispatcher's ladder, as agents.run@1's COST.BY: MACHINE (a model on the person's own computer), PLAN (a signed-in plan through its harness), KEY (the person's own provider key), ALLOWANCE (OpenVibe's free allowance), CREDITS (bought). An answer's receipt: the parts add up to the step's own totals. 1.3.0.",
+                "properties": {
+                  "machine": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "usd": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "tokens": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "plan": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "usd": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "tokens": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "key": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "usd": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "tokens": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "allowance": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "usd": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "tokens": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "credits": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "usd": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "tokens": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "model": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "description": "The model that wrote this entry, when the product knows it: the run's own (agents.run@1's MODEL) or another (a swap mid-session, a fall back to the person's own key). ID is the provider's model id; NAME is what a person reads; PROVIDER is whose it is (anthropic, deepseek, openai, the person's computer: machine). 1.3.0.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "provider": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,40}$"
               }
             }
           },
