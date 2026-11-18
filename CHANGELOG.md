@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.449.0 - 2026-11-18
+
+**Crowd control for robots** (plan §H2 stage 2, Maticus's mixer; OpenVibe.Bot #511): everyone in a robot's panel
+steers it together, their drives mixed into one command.
+- **`bot.robot@1` 1.1.0** and **`bot.robot-manage-request@1` 1.1.0**: `access_policy` may be `crowd`.
+- **`bot.robot-read-result@1` 1.1.0**: a reader's `role` may be `crowd`.
+- **`bot.command-result@1` 1.1.0**: `result: mixed` (a crowd member's drive went to the mixer, not the device) with
+  `steering`, how many people the mixer holds a fresh drive from.
+- **`bot.crowd-tick@1` 1.0.0** (new): the `crowd_tick` frame, at most twice a second while anyone steers: how many
+  steer, the crowd's pull on each axis, the style, which role drives over the crowd and whether it waits. It names
+  no person.
+- Fixtures: a crowd robot, a mixed result (and one with no one steering refused), two ticks (and one naming a person,
+  one pulling past the axis range, refused).
+
 ## 0.448.0 - 2026-11-18
 
 **Embeddings on a person's own machine** (the owner, 11-18: heavy work runs on the shared node via Link, never on

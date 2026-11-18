@@ -34,6 +34,7 @@
             "operator",
             "viewer",
             "queue",
+            "crowd",
             "service"
           ]
         }

@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "seq": 21,
+  "ts": 1759600000021,
+  "type": "command_result",
+  "id": "op-12",
+  "result": "mixed",
+  "steering": 7
+}
