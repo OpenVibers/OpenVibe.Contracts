@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.448.0 - 2026-11-18
+
+**Embeddings on a person's own machine** (the owner, 11-18: heavy work runs on the shared node via Link, never on
+production; embeddings were the last model on the host).
+- **`bot.command@1` 1.1.0**: an `ai` command's value is a chat (as before) or an embedding request, `{ model, input }`
+  (1 to 64 texts, each at most 8192 characters), answered by Link v0.82.0's ai plugin with `{ model, embeddings, usage? }`
+  from the machine's OpenAI-compatible `/v1/embeddings`. A machine that can says so with `ai.embed: true`.
+- Fixtures: an embedding request; refused: no texts, texts with messages, a number for a text.
+
 ## 0.447.0 - 2026-11-18
 
 **The repository Codes made, in the task's summary** (plan §AD.28 item 3: the session says "Codes made ada/<name> on

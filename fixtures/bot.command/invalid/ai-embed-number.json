@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 98,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-98",
+  "kind": "ai",
+  "value": {
+    "model": "bge-small-en-v1.5",
+    "input": [
+      42
+    ]
+  }
+}
