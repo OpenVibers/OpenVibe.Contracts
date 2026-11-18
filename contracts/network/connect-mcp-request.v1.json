@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/connect-mcp-request.v1.json",
+  "title": "NetworkConnectMcpRequest",
+  "description": "network.connect-mcp-request@1: one JSON-RPC 2.0 request to Connect's MCP server (POST https://connect.openvibe.network/mcp, or /mcp/all for search and execute over the person's OpenVibe apps). With network.connect.act a first-party service sends it as the person its token names (on_behalf_of), and reaches only what that person granted that service, app by app, on the Apps page. The params follow the MCP specification for the method (tools/list, tools/call with name and arguments, initialize, server/discover).",
+  "type": "object",
+  "required": [
+    "jsonrpc",
+    "method"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "id": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "params": {
+      "type": "object"
+    }
+  }
+}

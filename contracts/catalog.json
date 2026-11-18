@@ -3544,6 +3544,26 @@
       "adr": "ADR-003"
     },
     {
+      "id": "network.connect-mcp-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/connect-mcp-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-003"
+    },
+    {
+      "id": "network.connect-mcp-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/connect-mcp-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-003"
+    },
+    {
       "id": "network.project-usage-result",
       "version": "1.0.0",
       "owner": "network",

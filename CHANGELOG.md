@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.446.0 - 2026-11-18
+
+**A service acts for a person in Connect, through that person's grants** (plan §L.2: Finance Experts read the person's
+money as them, "never a bank login").
+- **`network.connect.act`** (first-party, never for apps): a service named in Connect's service callers (Actor, Codes)
+  calls Connect's MCP server (`POST /mcp`, `/mcp/all`) as the person its token names (`on_behalf_of`). It is also the
+  consent that lets that service mint such a token at openvibe.network, only for a person who signed in to it. It
+  reaches nothing by itself: only the apps and levels that person granted that service on the Apps page.
+- **`network.connect-mcp-request@1`** and **`network.connect-mcp-result@1`**: one JSON-RPC 2.0 request to Connect's MCP
+  server and its answer (a result or an error, never both; never a token).
+- Fixtures: a tools/call and a tools/list; a result, a missing grant and an unknown method; a non-2.0 request, a token
+  in the body, an answer with both or neither refused.
+
 ## 0.445.0 - 2026-11-18
 
 **The approval level, in the conversation** (plan §AD.27; the owner, 11-18: "make these approvals just built into the chat

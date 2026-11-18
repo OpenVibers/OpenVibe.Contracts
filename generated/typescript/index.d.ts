@@ -182178,6 +182178,34 @@ export interface NetworkProjectMemberResult {
   added_at?: string | null;
 }
 
+/** network.connect-mcp-request@1.0.0 (owner: network) */
+/**
+ * network.connect-mcp-request@1: one JSON-RPC 2.0 request to Connect's MCP server (POST https://connect.openvibe.network/mcp, or /mcp/all for search and execute over the person's OpenVibe apps). With network.connect.act a first-party service sends it as the person its token names (on_behalf_of), and reaches only what that person granted that service, app by app, on the Apps page. The params follow the MCP specification for the method (tools/list, tools/call with name and arguments, initialize, server/discover).
+ */
+export interface NetworkConnectMcpRequest {
+  jsonrpc: "2.0";
+  id?: string | number | null;
+  method: string;
+  params?: {};
+}
+
+/** network.connect-mcp-result@1.0.0 (owner: network) */
+/**
+ * network.connect-mcp-result@1: Connect's JSON-RPC 2.0 answer to a network.connect-mcp-request@1: a result (a tool's content, isError for a refusal such as a missing grant or a person who said no) or an error (an unknown method, a malformed request). It never carries a token or an app credential.
+ */
+export type NetworkConnectMcpResult = {
+  jsonrpc: "2.0";
+  id?: string | number | null;
+  result?: {};
+  error?: {
+    code: number;
+    message: string;
+    data?: unknown;
+  };
+} & {
+  [k: string]: unknown | undefined;
+};
+
 /** network.project-usage-result@1.0.0 (owner: network) */
 /**
  * network.project-usage-result@1 (roadmap WS-N task 4, ADR-014): what GET /api/v1/projects/:project/usage?days=&env= on OpenVibe.Network answers a project's owner or admin (or staff): the project's usage per day, service, capability and unit, added up from the <service>.usage.recorded rollups (common.usage-recorded@1) the owning services emit after each hour closes; the project's recorded quotas with what the current window has used; and its recent failures with their codes and trace ids. Counts only, never who did what: no subject id, address, input or content.
