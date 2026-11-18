@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.445.0 - 2026-11-18
+
+**The approval level, in the conversation** (plan §AD.27; the owner, 11-18: "make these approvals just built into the chat
+… adjust the approval methods in the little composer area").
+- **`agents.run@1` 1.5.0**, one optional field: `level`.
+  - `now` is the level the run's next steps run at: ask, auto-edits, approve-for-me or full (Actor's four, plan §12 A-1).
+  - `agent` is the agent's own level, which a conversation never goes below.
+  - `always_asks` lists what asks at every level: money, a password, deleting, a new recipient.
+  - `can_set` says the person may change it for this run.
+- Fixtures: a conversation with its level; a level that does not exist and an always-ask that is not one are refused.
+
 ## 0.444.0 - 2026-11-17
 
 **An answer's receipt** (plan §AD.17, "one agent system that always finds a way": every answer says how it ran).
