@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/codes/task-summary.v1.json",
   "title": "CodesTaskSummary",
-  "description": "codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null.",
+  "description": "codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null. MADE_REPO (1.1.0) is the repository Codes made for the task on OpenVibe Git when the person asked with no repository (a scratch repository in their name), else absent or null: its owner/name and its page.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -31,11 +31,22 @@
       "description": "The task's first line: what was asked, in the person's own words."
     },
     "status": {
-      "enum": ["queued", "running", "needs-you", "done", "failed", "stopped"],
+      "enum": [
+        "queued",
+        "running",
+        "needs-you",
+        "done",
+        "failed",
+        "stopped"
+      ],
       "description": "The task in the Dock's words."
     },
     "mode": {
-      "enum": ["create", "openvibe", "repo"],
+      "enum": [
+        "create",
+        "openvibe",
+        "repo"
+      ],
       "description": "Where the request started."
     },
     "repo": {
@@ -63,14 +74,44 @@
       "description": "The task's page on openvibe.codes."
     },
     "preview_url": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "uri",
       "description": "Its live preview when one exists, else null."
     },
     "pr_url": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "uri",
       "description": "The pull request it opened, else null."
+    },
+    "made_repo": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "full_name",
+        "url"
+      ],
+      "properties": {
+        "full_name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}/[A-Za-z0-9][A-Za-z0-9._-]{0,99}$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 500
+        }
+      },
+      "description": "The repository Codes made for this task on OpenVibe Git (Code mode with no repository), or null."
     }
   }
 }
