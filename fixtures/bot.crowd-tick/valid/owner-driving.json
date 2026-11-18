@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "seq": 41,
+  "ts": 1759600000041,
+  "type": "crowd_tick",
+  "robot_id": "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "people": 3,
+  "pull": {
+    "throttle": 1
+  },
+  "style": "mixed",
+  "override": {
+    "role": "owner"
+  },
+  "paused": true
+}

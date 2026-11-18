@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/crowd-tick.v1.json",
+  "title": "BotCrowdTick",
+  "description": "bot.crowd-tick@1: the crowd_tick frame OpenVibe.Bot sends on the operator and watch WebSockets of a robot whose access_policy is crowd, at most twice a second while anyone steers (server/crowd/). people is how many hold a fresh drive; pull is the crowd's average on each drive axis, before the viewer cap; style is the mixer (tug, last or mixed); override names the role driving over the crowd right now (owner, mod or operator), or null; paused is true while the crowd waits for that driver. No person is named: the Operators card names people from its own roster.",
+  "type": "object",
+  "required": [
+    "v",
+    "seq",
+    "ts",
+    "type",
+    "robot_id",
+    "people",
+    "pull",
+    "style",
+    "override",
+    "paused"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "type": {
+      "const": "crowd_tick"
+    },
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "people": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "pull": {
+      "type": "object",
+      "maxProperties": 8,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": -1,
+        "maximum": 1
+      }
+    },
+    "style": {
+      "enum": [
+        "tug",
+        "last",
+        "mixed"
+      ]
+    },
+    "override": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "role": {
+              "enum": [
+                "owner",
+                "mod",
+                "operator"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "paused": {
+      "type": "boolean"
+    }
+  }
+}

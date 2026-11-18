@@ -7232,7 +7232,7 @@
     },
     {
       "id": "bot.robot",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/robot.v1.json",
       "visibility": "first-party",
@@ -7250,7 +7250,7 @@
     },
     {
       "id": "bot.robot-read-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/robot-read-result.v1.json",
       "visibility": "first-party",
@@ -7259,7 +7259,7 @@
     },
     {
       "id": "bot.robot-manage-request",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/robot-manage-request.v1.json",
       "visibility": "first-party",
@@ -7335,9 +7335,19 @@
     },
     {
       "id": "bot.command-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/command-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.crowd-tick",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/crowd-tick.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",

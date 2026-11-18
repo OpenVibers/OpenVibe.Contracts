@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/robot.v1.json",
   "title": "BotRobot",
-  "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false.",
+  "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false. access_policy crowd (1.1.0): everyone in the panel steers it together; their drives are mixed into one command (bot.crowd-tick@1).",
   "type": "object",
   "required": [
     "id",
@@ -32,7 +32,8 @@
       "enum": [
         "private",
         "invite",
-        "queue"
+        "queue",
+        "crowd"
       ]
     },
     "limits": {

@@ -220599,16 +220599,16 @@ export interface ObjectZoneUsage {
   }[];
 }
 
-/** bot.robot@1.0.0 (owner: bot) */
+/** bot.robot@1.1.0 (owner: bot) */
 /**
- * bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false.
+ * bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false. access_policy crowd (1.1.0): everyone in the panel steers it together; their drives are mixed into one command (bot.crowd-tick@1).
  */
 export interface BotRobot {
   id: string;
   name: string;
   profile_id: string;
   profile_version?: unknown;
-  access_policy: "private" | "invite" | "queue";
+  access_policy: "private" | "invite" | "queue" | "crowd";
   limits: {};
   /**
    * The old stop-latch field, kept for the contract window: Bot sends latched false and never reads or writes it. A later contract migration removes it.
@@ -220649,7 +220649,7 @@ export interface BotDevice {
   os?: string | null;
 }
 
-/** bot.robot-read-result@1.0.0 (owner: bot) */
+/** bot.robot-read-result@1.1.0 (owner: bot) */
 /**
  * bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service token needs no acting subject: only GET …/robots needs ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).
  */
@@ -220659,7 +220659,7 @@ export type BotRobotReadResult =
     }
   | {
       robot: BotRobot;
-      role: "owner" | "operator" | "viewer" | "queue" | "service";
+      role: "owner" | "operator" | "viewer" | "queue" | "crowd" | "service";
     }
   | {
       operators: {
@@ -220690,7 +220690,7 @@ export type BotRobotReadResult =
       }[];
     };
 
-/** bot.robot-manage-request@1.0.0 (owner: bot) */
+/** bot.robot-manage-request@1.1.0 (owner: bot) */
 /**
  * bot.robot-manage-request@1: bodies of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → { owner (the person a service acts for), name, profile_id, access_policy?, limits? }; PATCH …/robots/:id → { name?, access_policy?, limits? }; POST …/robots/:id/operators → { subject, role? (operator by default) }. POST …/robots/:id/pairing-code and both DELETE routes take no body.
  */
@@ -220699,12 +220699,12 @@ export type BotRobotManageRequest =
       owner?: string;
       name: string;
       profile_id: string;
-      access_policy?: "private" | "invite" | "queue";
+      access_policy?: "private" | "invite" | "queue" | "crowd";
       limits?: {};
     }
   | {
       name?: string;
-      access_policy?: "private" | "invite" | "queue";
+      access_policy?: "private" | "invite" | "queue" | "crowd";
       limits?: {};
     }
   | {
@@ -270682,9 +270682,9 @@ export type BotCommand = {
   ms?: number;
 };
 
-/** bot.command-result@1.0.0 (owner: bot) */
+/** bot.command-result@1.1.0 (owner: bot) */
 /**
- * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have. mixed (1.1.0): on a crowd robot a crowd member's drive is an input for the mixer, never a command of its own; steering says how many are steering.
  */
 export interface BotCommandResult {
   v: 1;
@@ -270692,11 +270692,15 @@ export interface BotCommandResult {
   ts: number;
   type: "command_result";
   id: string;
-  result: "ack" | "nack" | "refused" | "expired" | "pending";
+  result: "ack" | "nack" | "refused" | "expired" | "pending" | "mixed";
   reason?: string | null;
   code?: string;
   latency_ms?: number;
   cached?: boolean;
+  /**
+   * With result mixed: how many people the crowd mixer holds a fresh drive from, this one included.
+   */
+  steering?: number;
   /**
    * A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen.
    */
@@ -270712,6 +270716,27 @@ export interface BotCommandResult {
     safe: boolean;
     reason?: string;
   };
+}
+
+/** bot.crowd-tick@1.0.0 (owner: bot) */
+/**
+ * bot.crowd-tick@1: the crowd_tick frame OpenVibe.Bot sends on the operator and watch WebSockets of a robot whose access_policy is crowd, at most twice a second while anyone steers (server/crowd/). people is how many hold a fresh drive; pull is the crowd's average on each drive axis, before the viewer cap; style is the mixer (tug, last or mixed); override names the role driving over the crowd right now (owner, mod or operator), or null; paused is true while the crowd waits for that driver. No person is named: the Operators card names people from its own roster.
+ */
+export interface BotCrowdTick {
+  v: 1;
+  seq: number;
+  ts: number;
+  type: "crowd_tick";
+  robot_id: string;
+  people: number;
+  pull: {
+    [k: string]: number | undefined;
+  };
+  style: "tug" | "last" | "mixed";
+  override: null | {
+    role: "owner" | "mod" | "operator";
+  };
+  paused: boolean;
 }
 
 /** bot.job-dispatch-result@1.0.0 (owner: bot) */

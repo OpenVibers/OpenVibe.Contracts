@@ -83071,14 +83071,14 @@
       }
     },
     "bot.robot": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/robot.v1.json",
         "title": "BotRobot",
-        "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false.",
+        "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false. access_policy crowd (1.1.0): everyone in the panel steers it together; their drives are mixed into one command (bot.crowd-tick@1).",
         "type": "object",
         "required": [
           "id",
@@ -83108,7 +83108,8 @@
             "enum": [
               "private",
               "invite",
-              "queue"
+              "queue",
+              "crowd"
             ]
           },
           "limits": {
@@ -83246,7 +83247,7 @@
       }
     },
     "bot.robot-read-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "status": "active",
       "schema": {
@@ -83285,6 +83286,7 @@
                   "operator",
                   "viewer",
                   "queue",
+                  "crowd",
                   "service"
                 ]
               }
@@ -83441,7 +83443,7 @@
       }
     },
     "bot.robot-manage-request": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "status": "active",
       "schema": {
@@ -83474,7 +83476,8 @@
                 "enum": [
                   "private",
                   "invite",
-                  "queue"
+                  "queue",
+                  "crowd"
                 ]
               },
               "limits": {
@@ -83494,7 +83497,8 @@
                 "enum": [
                   "private",
                   "invite",
-                  "queue"
+                  "queue",
+                  "crowd"
                 ]
               },
               "limits": {
@@ -86682,14 +86686,14 @@
       }
     },
     "bot.command-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command-result.v1.json",
         "title": "BotCommandResult",
-        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.",
+        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have. mixed (1.1.0): on a crowd robot a crowd member's drive is an input for the mixer, never a command of its own; steering says how many are steering.",
         "type": "object",
         "required": [
           "v",
@@ -86726,7 +86730,8 @@
               "nack",
               "refused",
               "expired",
-              "pending"
+              "pending",
+              "mixed"
             ]
           },
           "reason": {
@@ -86745,6 +86750,12 @@
           },
           "cached": {
             "type": "boolean"
+          },
+          "steering": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000,
+            "description": "With result mixed: how many people the crowd mixer holds a fresh drive from, this one included."
           },
           "data": {
             "type": "object",
@@ -86776,6 +86787,101 @@
                 "maxLength": 500
               }
             }
+          }
+        }
+      }
+    },
+    "bot.crowd-tick": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/crowd-tick.v1.json",
+        "title": "BotCrowdTick",
+        "description": "bot.crowd-tick@1: the crowd_tick frame OpenVibe.Bot sends on the operator and watch WebSockets of a robot whose access_policy is crowd, at most twice a second while anyone steers (server/crowd/). people is how many hold a fresh drive; pull is the crowd's average on each drive axis, before the viewer cap; style is the mixer (tug, last or mixed); override names the role driving over the crowd right now (owner, mod or operator), or null; paused is true while the crowd waits for that driver. No person is named: the Operators card names people from its own roster.",
+        "type": "object",
+        "required": [
+          "v",
+          "seq",
+          "ts",
+          "type",
+          "robot_id",
+          "people",
+          "pull",
+          "style",
+          "override",
+          "paused"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "v": {
+            "const": 1
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "type": {
+            "const": "crowd_tick"
+          },
+          "robot_id": {
+            "type": "string",
+            "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "people": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "pull": {
+            "type": "object",
+            "maxProperties": 8,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,31}$"
+            },
+            "additionalProperties": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            }
+          },
+          "style": {
+            "enum": [
+              "tug",
+              "last",
+              "mixed"
+            ]
+          },
+          "override": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "role"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "owner",
+                      "mod",
+                      "operator"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "paused": {
+            "type": "boolean"
           }
         }
       }
