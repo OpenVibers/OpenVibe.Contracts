@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.447.0 - 2026-11-18
+
+**The repository Codes made, in the task's summary** (plan §AD.28 item 3: the session says "Codes made ada/<name> on
+OpenVibe Git" with its link).
+- **`codes.task-summary@1` 1.1.0**, one optional field: `made_repo` `{ full_name, url }` (https only), the repository
+  Codes made on OpenVibe Git for a Code-mode task that named none; absent or null otherwise.
+- Fixtures: a summary with its made repository; one whose page is not https refused.
+
 ## 0.446.0 - 2026-11-18
 
 **A service acts for a person in Connect, through that person's grants** (plan §L.2: Finance Experts read the person's

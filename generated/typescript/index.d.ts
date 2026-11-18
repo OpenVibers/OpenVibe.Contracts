@@ -282976,9 +282976,9 @@ export interface CodesTask {
 
 /** codes.task@2.1.0 (owner: codes) */
 
-/** codes.task-summary@1.0.0 (owner: codes) */
+/** codes.task-summary@1.1.0 (owner: codes) */
 /**
- * codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null.
+ * codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null. MADE_REPO (1.1.0) is the repository Codes made for the task on OpenVibe Git when the person asked with no repository (a scratch repository in their name), else absent or null: its owner/name and its page.
  */
 export interface CodesTaskSummary {
   /**
@@ -283019,6 +283019,13 @@ export interface CodesTaskSummary {
    * The pull request it opened, else null.
    */
   pr_url: string | null;
+  /**
+   * The repository Codes made for this task on OpenVibe Git (Code mode with no repository), or null.
+   */
+  made_repo?: {
+    full_name: string;
+    url: string;
+  } | null;
 }
 
 /** play.title-definition@1.0.0 (owner: play) */
