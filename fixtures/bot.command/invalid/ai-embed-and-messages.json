@@ -1,0 +1,20 @@
+{
+  "v": 1,
+  "seq": 97,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-97",
+  "kind": "ai",
+  "value": {
+    "model": "bge-small-en-v1.5",
+    "input": [
+      "x"
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "x"
+      }
+    ]
+  }
+}

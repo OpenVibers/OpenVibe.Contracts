@@ -7325,7 +7325,7 @@
     },
     {
       "id": "bot.command",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/command.v1.json",
       "visibility": "first-party",

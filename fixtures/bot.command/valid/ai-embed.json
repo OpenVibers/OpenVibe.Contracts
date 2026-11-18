@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "seq": 95,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-95",
+  "kind": "ai",
+  "value": {
+    "model": "bge-small-en-v1.5",
+    "input": [
+      "what is a mutex",
+      "a lock that one thread holds at a time"
+    ]
+  }
+}
