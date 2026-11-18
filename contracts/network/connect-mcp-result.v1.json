@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/connect-mcp-result.v1.json",
+  "title": "NetworkConnectMcpResult",
+  "description": "network.connect-mcp-result@1: Connect's JSON-RPC 2.0 answer to a network.connect-mcp-request@1: a result (a tool's content, isError for a refusal such as a missing grant or a person who said no) or an error (an unknown method, a malformed request). It never carries a token or an app credential.",
+  "type": "object",
+  "required": [
+    "jsonrpc"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "id": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "result": {
+      "type": "object"
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {}
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "result"
+      ]
+    },
+    {
+      "required": [
+        "error"
+      ]
+    }
+  ]
+}

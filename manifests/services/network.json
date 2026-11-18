@@ -63,6 +63,7 @@
     "network.coins.read",
     "network.coins.transfer",
     "network.confirmation.manage",
+    "network.connect.act",
     "network.dock.timer.write",
     "network.follows.read",
     "network.follows.write",

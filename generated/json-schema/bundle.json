@@ -38097,6 +38097,102 @@
         }
       }
     },
+    "network.connect-mcp-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/connect-mcp-request.v1.json",
+        "title": "NetworkConnectMcpRequest",
+        "description": "network.connect-mcp-request@1: one JSON-RPC 2.0 request to Connect's MCP server (POST https://connect.openvibe.network/mcp, or /mcp/all for search and execute over the person's OpenVibe apps). With network.connect.act a first-party service sends it as the person its token names (on_behalf_of), and reaches only what that person granted that service, app by app, on the Apps page. The params follow the MCP specification for the method (tools/list, tools/call with name and arguments, initialize, server/discover).",
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "method"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "params": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "network.connect-mcp-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/connect-mcp-result.v1.json",
+        "title": "NetworkConnectMcpResult",
+        "description": "network.connect-mcp-result@1: Connect's JSON-RPC 2.0 answer to a network.connect-mcp-request@1: a result (a tool's content, isError for a refusal such as a missing grant or a person who said no) or an error (an unknown method, a malformed request). It never carries a token or an app credential.",
+        "type": "object",
+        "required": [
+          "jsonrpc"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "result": {
+            "type": "object"
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              },
+              "data": {}
+            }
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "result"
+            ]
+          },
+          {
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
     "network.project-usage-result": {
       "version": "1.0.0",
       "owner": "network",

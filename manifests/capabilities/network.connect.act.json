@@ -1,0 +1,22 @@
+{
+  "id": "network.connect.act",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Act for one person in Connect (2026-11-18, plan §L.2 Finance Experts): a first-party service named in Connect's service callers (Actor, Codes) calls Connect's MCP server as the person its token names (on_behalf_of). It is also the consent that lets that service mint such a token at openvibe.network, and then only for a person who signed in to that service. It reaches nothing by itself: only the apps and levels (read, or read and write) that person granted that service on the Apps page, a send, delete or pay action still asks the person, and OpenVibe's own apps answer with a delegated person token for one service and one call. Never grantable to apps.",
+  "permissions": [
+    "connect:act"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "connect-act",
+  "events": [],
+  "implementedBy": [
+    "POST /mcp",
+    "POST /mcp/all"
+  ],
+  "inputSchema": "network.connect-mcp-request@1",
+  "outputSchema": "network.connect-mcp-result@1"
+}
