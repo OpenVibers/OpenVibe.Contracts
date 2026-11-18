@@ -365476,7 +365476,7 @@ export interface FrameMentions {
       ];
 }
 
-/** agents.run@1.4.0 (owner: actor) */
+/** agents.run@1.5.0 (owner: actor) */
 /**
  * agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1. Since 1.2.0 (agent-engine.md §§3-5, from the code study) a run may also say why it exists (MANDATE: an ask taken in from the feed, a room, an issue), what it continues (LINEAGE: a fork, a hand-off, a regenerated turn), the play its tree follows and a child's ROLE in it, what its agent's harness can do (AGENT.CAPABILITIES), and what it spent on each rung of the ladder (COST.BY). Every added field is optional.
  */
@@ -370273,6 +370273,66 @@ export interface AgentsRun {
           }
         ];
   };
+  /**
+   * How much the run does on its own before it asks (plan §12 A-1; 1.5.0, the owner 11-18: "adjust the approval methods in the little composer area"). NOW is the level its next steps run at: ask (it asks before every act), auto-edits (edits go on, other acts ask), approve-for-me (a reviewer model of another family approves ordinary steps; unsure, it asks the person) or full (it acts, then says what it did). AGENT is the agent's own level: a conversation never runs below it, so a level under it is changed on the agent. ALWAYS_ASKS lists what asks at every level whatever is chosen (spending money, a password or secret, deleting something, a new recipient). CAN_SET is true when the person may change NOW for this run. Null or absent: the product has no levels.
+   */
+  level?: {
+    now: "ask" | "auto-edits" | "approve-for-me" | "full";
+    agent?: "ask" | "auto-edits" | "approve-for-me" | "full";
+    /**
+     * @maxItems 8
+     */
+    always_asks?:
+      | []
+      | ["money" | "password" | "delete" | "new_recipient"]
+      | ["money" | "password" | "delete" | "new_recipient", "money" | "password" | "delete" | "new_recipient"]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ];
+    can_set?: boolean;
+  } | null;
 }
 
 /** agents.step@1.3.0 (owner: actor) */
@@ -390234,6 +390294,66 @@ export interface AgentsRunUpdatedPayload {
           }
         ];
   };
+  /**
+   * How much the run does on its own before it asks (plan §12 A-1; 1.5.0, the owner 11-18: "adjust the approval methods in the little composer area"). NOW is the level its next steps run at: ask (it asks before every act), auto-edits (edits go on, other acts ask), approve-for-me (a reviewer model of another family approves ordinary steps; unsure, it asks the person) or full (it acts, then says what it did). AGENT is the agent's own level: a conversation never runs below it, so a level under it is changed on the agent. ALWAYS_ASKS lists what asks at every level whatever is chosen (spending money, a password or secret, deleting something, a new recipient). CAN_SET is true when the person may change NOW for this run. Null or absent: the product has no levels.
+   */
+  level?: {
+    now: "ask" | "auto-edits" | "approve-for-me" | "full";
+    agent?: "ask" | "auto-edits" | "approve-for-me" | "full";
+    /**
+     * @maxItems 8
+     */
+    always_asks?:
+      | []
+      | ["money" | "password" | "delete" | "new_recipient"]
+      | ["money" | "password" | "delete" | "new_recipient", "money" | "password" | "delete" | "new_recipient"]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ]
+      | [
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient",
+          "money" | "password" | "delete" | "new_recipient"
+        ];
+    can_set?: boolean;
+  } | null;
 }
 
 /** agents.play@1.1.0 (owner: network) */

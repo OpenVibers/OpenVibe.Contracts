@@ -140293,7 +140293,7 @@
       }
     },
     "agents.run": {
-      "version": "1.4.0",
+      "version": "1.5.0",
       "owner": "actor",
       "status": "active",
       "schema": {
@@ -141140,6 +141140,51 @@
                     }
                   }
                 }
+              }
+            }
+          },
+          "level": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "now"
+            ],
+            "description": "How much the run does on its own before it asks (plan §12 A-1; 1.5.0, the owner 11-18: \"adjust the approval methods in the little composer area\"). NOW is the level its next steps run at: ask (it asks before every act), auto-edits (edits go on, other acts ask), approve-for-me (a reviewer model of another family approves ordinary steps; unsure, it asks the person) or full (it acts, then says what it did). AGENT is the agent's own level: a conversation never runs below it, so a level under it is changed on the agent. ALWAYS_ASKS lists what asks at every level whatever is chosen (spending money, a password or secret, deleting something, a new recipient). CAN_SET is true when the person may change NOW for this run. Null or absent: the product has no levels.",
+            "properties": {
+              "now": {
+                "enum": [
+                  "ask",
+                  "auto-edits",
+                  "approve-for-me",
+                  "full"
+                ]
+              },
+              "agent": {
+                "enum": [
+                  "ask",
+                  "auto-edits",
+                  "approve-for-me",
+                  "full"
+                ]
+              },
+              "always_asks": {
+                "type": "array",
+                "uniqueItems": true,
+                "maxItems": 8,
+                "items": {
+                  "enum": [
+                    "money",
+                    "password",
+                    "delete",
+                    "new_recipient"
+                  ]
+                }
+              },
+              "can_set": {
+                "type": "boolean"
               }
             }
           }

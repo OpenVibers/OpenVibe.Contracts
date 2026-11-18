@@ -11861,7 +11861,7 @@
     },
     {
       "id": "agents.run",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "owner": "actor",
       "schema": "agents/run.v1.json",
       "visibility": "public",
