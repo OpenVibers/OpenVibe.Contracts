@@ -202971,6 +202971,10 @@ export interface Watch {
          * The 5-hour window, the weekly one, or any (the default).
          */
         window?: "5h" | "week" | "any";
+        /**
+         * Since 0.451.0: only windows that reset within this many hours are chosen for the top fields (left_pct …); none: they are null and a condition on them does not fire. "My week resets within 12 hours with 15% left" is reset_within_hours 12 and left_pct >= 15.
+         */
+        reset_within_hours?: number;
       };
   /**
    * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).
@@ -206232,6 +206236,10 @@ export interface WatchRequest {
          * The 5-hour window, the weekly one, or any (the default).
          */
         window?: "5h" | "week" | "any";
+        /**
+         * Since 0.451.0: only windows that reset within this many hours are chosen for the top fields (left_pct …); none: they are null and a condition on them does not fire. "My week resets within 12 hours with 15% left" is reset_within_hours 12 and left_pct >= 15.
+         */
+        reset_within_hours?: number;
       };
   /**
    * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).
