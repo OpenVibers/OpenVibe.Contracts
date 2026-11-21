@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.452.0 - 2026-11-21
+
+`watch.check-run@1`'s `carrier` takes `usage` (the usage source of 0.450.0): a usage watch's check runs were refused
+when read back, and its page could not be shown. Plan AD.37.
+
 ## 0.451.0 - 2026-11-21
 
 `watch.watch@1`'s `usage` source gains `reset_within_hours` (1–168): only windows that reset within that many hours are
