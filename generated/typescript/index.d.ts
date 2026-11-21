@@ -209454,7 +209454,7 @@ export interface WatchCheckRun {
   id: string;
   watch_id: string;
   trigger: "schedule" | "manual" | "event" | "webhook";
-  carrier: "event" | "webhook" | "http" | "feed" | "api" | "node" | "run" | null;
+  carrier: "event" | "webhook" | "http" | "feed" | "api" | "node" | "run" | "usage" | null;
   started_at: string;
   finished_at: string;
   state:

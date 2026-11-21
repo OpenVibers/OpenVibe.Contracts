@@ -10,7 +10,7 @@
     "id": { "type": "string", "pattern": "^ckr_[0-9A-HJKMNP-TV-Z]{26}$" },
     "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
     "trigger": { "enum": ["schedule", "manual", "event", "webhook"] },
-    "carrier": { "type": ["string", "null"], "enum": ["event", "webhook", "http", "feed", "api", "node", "run", null] },
+    "carrier": { "type": ["string", "null"], "enum": ["event", "webhook", "http", "feed", "api", "node", "run", "usage", null] },
     "started_at": { "type": "string", "format": "date-time" },
     "finished_at": { "type": "string", "format": "date-time" },
     "state": { "enum": ["ok", "not_modified", "no_change", "changed", "condition_met", "http_error", "timeout", "parse_error", "rate_limited", "budget_exceeded", "skipped", "disabled"] },
