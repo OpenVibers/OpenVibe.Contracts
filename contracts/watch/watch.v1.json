@@ -325,6 +325,32 @@
               "$ref": "../platform/workload-requirements.v1.json"
             }
           }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false,
+          "description": "Since 0.450.0: the owner's AI plan usage, as OpenVibe.Codes reads it from their machines (each coding agent's windows: the 5-hour and the weekly, how much is used and when each resets). The check states { windows: [{ agent, window, used_pct, left_pct, resets_at, hours_to_reset }], and the chosen window's agent, window, used_pct, left_pct, resets_at and hours_to_reset at the top } so a condition reads, say, left_pct >= 15 and hours_to_reset <= 12. AGENT narrows to one coding agent (claude-code, codex, …); WINDOW to one window; without them the window that resets soonest with room left is chosen. The watch must belong to a person.",
+          "properties": {
+            "kind": {
+              "const": "usage"
+            },
+            "agent": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,39}$",
+              "description": "One coding agent (claude-code, codex, opencode, command-code, …)."
+            },
+            "window": {
+              "enum": [
+                "5h",
+                "week",
+                "any"
+              ],
+              "description": "The 5-hour window, the weekly one, or any (the default)."
+            }
+          }
         }
       ]
     },
