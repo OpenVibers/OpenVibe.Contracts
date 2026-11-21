@@ -202960,6 +202960,17 @@ export interface Watch {
           }[]
         ];
         workload?: WorkloadRequirements;
+      }
+    | {
+        kind: "usage";
+        /**
+         * One coding agent (claude-code, codex, opencode, command-code, …).
+         */
+        agent?: string;
+        /**
+         * The 5-hour window, the weekly one, or any (the default).
+         */
+        window?: "5h" | "week" | "any";
       };
   /**
    * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).
@@ -206210,6 +206221,17 @@ export interface WatchRequest {
           }[]
         ];
         workload?: WorkloadRequirements;
+      }
+    | {
+        kind: "usage";
+        /**
+         * One coding agent (claude-code, codex, opencode, command-code, …).
+         */
+        agent?: string;
+        /**
+         * The 5-hour window, the weekly one, or any (the default).
+         */
+        window?: "5h" | "week" | "any";
       };
   /**
    * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.450.0 - 2026-11-21
+
+**Watch reads your AI plan usage** (plan AD.37; the owner, 11-21: "detect your usage limit and … use that on Watch or
+other platforms"). `watch.watch@1` gains a `usage` source: the owner's coding agents' plan windows as OpenVibe.Codes
+reads them from their machines (`GET /api/v1/me/usage`), each `{ agent, window, used_pct, left_pct, resets_at,
+hours_to_reset }`, and the chosen window's fields at the top so a condition reads `left_pct >= 15` and
+`hours_to_reset <= 12`. `agent` and `window` narrow it; without them the window that resets soonest with room left is
+chosen. A person's watch only.
+
 ## 0.449.0 - 2026-11-18
 
 **Crowd control for robots** (plan §H2 stage 2, Maticus's mixer; OpenVibe.Bot #511): everyone in a robot's panel
