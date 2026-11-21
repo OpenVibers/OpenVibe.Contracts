@@ -349,6 +349,12 @@
                 "any"
               ],
               "description": "The 5-hour window, the weekly one, or any (the default)."
+            },
+            "reset_within_hours": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 168,
+              "description": "Since 0.451.0: only windows that reset within this many hours are chosen for the top fields (left_pct …); none: they are null and a condition on them does not fire. \"My week resets within 12 hours with 15% left\" is reset_within_hours 12 and left_pct >= 15."
             }
           }
         }

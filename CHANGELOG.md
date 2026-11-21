@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.451.0 - 2026-11-21
+
+`watch.watch@1`'s `usage` source gains `reset_within_hours` (1–168): only windows that reset within that many hours are
+chosen for the top fields, so one condition says "my week resets within 12 hours with 15% left" (`reset_within_hours:
+12`, `left_pct >= 15`). Plan AD.37.
+
 ## 0.450.0 - 2026-11-21
 
 **Watch reads your AI plan usage** (plan AD.37; the owner, 11-21: "detect your usage limit and … use that on Watch or

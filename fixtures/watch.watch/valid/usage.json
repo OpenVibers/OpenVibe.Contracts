@@ -10,7 +10,8 @@
   "source": {
     "kind": "usage",
     "agent": "claude-code",
-    "window": "week"
+    "window": "week",
+    "reset_within_hours": 12
   },
   "cadence": {
     "every_sec": 3600,
