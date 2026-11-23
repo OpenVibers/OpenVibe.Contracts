@@ -7444,6 +7444,26 @@
       "adr": "ADR-043"
     },
     {
+      "id": "bot.turn.started",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.turn.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.turn.ended",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.turn.ended.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
       "id": "browser-provider.job-create-request",
       "version": "1.0.0",
       "owner": "run",

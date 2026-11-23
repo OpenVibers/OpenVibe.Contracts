@@ -271083,6 +271083,48 @@ export interface BotCommandRefusedPayload {
   role: string | null;
 }
 
+/** bot.turn.started@1.0.0 (owner: bot) */
+/**
+ * bot.turn.started v1 (OpenVibe.Bot server/domain/index.js currentTurn). A queue robot's next person in line got their turn. It never names the person (no member ever learns the active driver's subject): guest says whether a signed-out viewer holds it. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority normal, actor service:bot.
+ */
+export interface BotTurnStartedPayload {
+  robot_id: string;
+  /**
+   * The robot owner's user subject.
+   */
+  owner?: string;
+  /**
+   * When the turn ends unless it pauses (an owner's takeover, or the robot not ready).
+   */
+  ends_at: string;
+  /**
+   * A signed-out viewer holds the turn (the owner let guests take turns).
+   */
+  guest: boolean;
+  /**
+   * How many people are still in line.
+   */
+  waiting: number;
+}
+
+/** bot.turn.ended@1.0.0 (owner: bot) */
+/**
+ * bot.turn.ended v1 (OpenVibe.Bot server/domain/index.js handedOff). A queue robot's turn ended: its time ran out (turn_ended) or its holder left the line (turn_left). Bot halts the robot before the next turn. It never names the person. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority normal, actor service:bot.
+ */
+export interface BotTurnEndedPayload {
+  robot_id: string;
+  /**
+   * The robot owner's user subject.
+   */
+  owner?: string;
+  reason: "turn_ended" | "turn_left";
+  guest: boolean;
+  /**
+   * The turn's presses (buttons, clicks on the video) spent; driving never counts.
+   */
+  presses_used?: number;
+}
+
 /** browser-provider.job-create-request@1.0.0 (owner: run) */
 /**
  * browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.

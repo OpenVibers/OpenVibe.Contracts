@@ -45,7 +45,9 @@
   "eventsProduced": [
     "bot.robot.online",
     "bot.robot.offline",
-    "bot.command.refused"
+    "bot.command.refused",
+    "bot.turn.started",
+    "bot.turn.ended"
   ],
   "eventsConsumed": [
     "network.account.export_requested",

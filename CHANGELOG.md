@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.453.0 - 2026-11-23
+
+Two OpenVibe.Bot events for a robot's line (LOOI viewer turns, 11-23): `bot.turn.started` (the next person got their
+turn: when it ends, whether a guest holds it, how many still wait) and `bot.turn.ended` (`turn_ended` when its time ran
+out, `turn_left` when its holder left, with the presses spent). Neither names the person: no member ever learns the
+active driver's subject. An owner's takeover pauses a turn and is not an end. Bot's service manifest produces both.
+
 ## 0.452.0 - 2026-11-21
 
 `watch.check-run@1`'s `carrier` takes `usage` (the usage source of 0.450.0): a usage watch's check runs were refused

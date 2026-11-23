@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.turn.ended.v1.json",
+  "title": "BotTurnEndedPayload",
+  "description": "bot.turn.ended v1 (OpenVibe.Bot server/domain/index.js handedOff). A queue robot's turn ended: its time ran out (turn_ended) or its holder left the line (turn_left). Bot halts the robot before the next turn. It never names the person. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority normal, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "reason",
+    "guest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The robot owner's user subject."
+    },
+    "reason": {
+      "enum": [
+        "turn_ended",
+        "turn_left"
+      ]
+    },
+    "guest": {
+      "type": "boolean"
+    },
+    "presses_used": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The turn's presses (buttons, clicks on the video) spent; driving never counts."
+    }
+  }
+}
