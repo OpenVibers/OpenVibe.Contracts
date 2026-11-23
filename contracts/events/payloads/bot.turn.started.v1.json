@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.turn.started.v1.json",
+  "title": "BotTurnStartedPayload",
+  "description": "bot.turn.started v1 (OpenVibe.Bot server/domain/index.js currentTurn). A queue robot's next person in line got their turn. It never names the person (no member ever learns the active driver's subject): guest says whether a signed-out viewer holds it. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority normal, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "ends_at",
+    "guest",
+    "waiting"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The robot owner's user subject."
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the turn ends unless it pauses (an owner's takeover, or the robot not ready)."
+    },
+    "guest": {
+      "type": "boolean",
+      "description": "A signed-out viewer holds the turn (the owner let guests take turns)."
+    },
+    "waiting": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many people are still in line."
+    }
+  }
+}
