@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.454.0 - 2026-11-23
+
+**LOOI's manifest 1.1.0, frozen with Maticus** (his phone bridge 0.2.17): 1.0.0's drive, head and headlights, the
+robot's settings (mode, speed stage, Camera only head speed, spin limit with Off the owner's alone, Set center here) as
+`setting` commands the phone checks, the phone's report of what is in effect (`looi_bridge`) and the head's pose in
+`p7_head.value`. 1.0.0 stays as it was (`fixtures/bot.robot-manifest/valid/looi-1.0.0.json`).
+- `bot.robot-manifest@1`: a command may list its `options` (control `choice`) and the `owner_only` ones; a `setting`
+  names which one.
+- `bot.device-message@1` says what Bot sends: `config.role_caps` (the owner's caps for whoever holds a turn and for
+  guests: a top speed, and a setting's highest option such as LOOI's speed stage), the `headlight` and `setting` kinds,
+  and `operator.via` / `operator.turn`. `bot.command@1` takes `headlight` and `setting`.
+
 ## 0.453.0 - 2026-11-23
 
 Two OpenVibe.Bot events for a robot's line (LOOI viewer turns, 11-23): `bot.turn.started` (the next person got their

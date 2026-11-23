@@ -220972,7 +220972,7 @@ export interface BotRobotProfile {
 
 /** bot.robot-manifest@1.1.0 (owner: bot) */
 /**
- * bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses.
+ * bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses. A setting (0.454.0) is a command of kind setting with its name, the options it takes (control choice) and the ones that are the owner's alone; the robot checks it and reports what is in effect in a reading.
  */
 export interface BotRobotManifest {
   /**
@@ -221005,8 +221005,16 @@ export interface BotRobotManifest {
       [k: string]: unknown | undefined;
     } & {
       [k: string]: unknown | undefined;
+    } & {
+      [k: string]: unknown | undefined;
+    } & {
+      [k: string]: unknown | undefined;
     },
     ...({
+      [k: string]: unknown | undefined;
+    } & {
+      [k: string]: unknown | undefined;
+    } & {
       [k: string]: unknown | undefined;
     } & {
       [k: string]: unknown | undefined;
@@ -221184,7 +221192,9 @@ export type BotDeviceMessage =
         max_command_ms?: number;
         heartbeat_ms?: number;
       };
-      allowed_commands: ("drive" | "actuator" | "ptz" | "say" | "display" | "halt")[];
+      allowed_commands: (
+        "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "headlight" | "setting"
+      )[];
       /**
        * The old latch field: Bot always sends false and no longer latches anything.
        */
@@ -221197,6 +221207,35 @@ export type BotDeviceMessage =
        * The call word the owner chose ("hey vibe" unless they chose another); sent with voice on.
        */
       call_word?: string;
+      /**
+       * Caps the owner set for whoever holds a turn (operator.turn true) and for guests (a gst_ subject) (0.454.0). Absent: none.
+       */
+      role_caps?: {
+        turn?: {
+          /**
+           * A share of the robot's own limits: Bot already scales these drivers' commands by it.
+           */
+          max_speed?: number;
+          /**
+           * The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it.
+           */
+          settings?: {
+            [k: string]: (string | number) | undefined;
+          };
+        };
+        guest?: {
+          /**
+           * A share of the robot's own limits: Bot already scales these drivers' commands by it.
+           */
+          max_speed?: number;
+          /**
+           * The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it.
+           */
+          settings?: {
+            [k: string]: (string | number) | undefined;
+          };
+        };
+      };
     }
   | {
       v: 1;
@@ -221220,7 +221259,9 @@ export type BotDeviceMessage =
         | "probe"
         | "input"
         | "browser"
-        | "screen_stream";
+        | "screen_stream"
+        | "headlight"
+        | "setting";
       /**
        * The command's value. screen_stream (OpenVibe Link v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind.
        */
@@ -221232,6 +221273,14 @@ export type BotDeviceMessage =
       operator?: {
         subject?: string | null;
         role: string;
+        /**
+         * The role Bot decided, where the profile names it otherwise for its driver (queue for a turn holder sent as operator).
+         */
+        via?: string;
+        /**
+         * The command comes from whoever holds the robot's turn.
+         */
+        turn?: boolean;
       };
       /**
        * The robot's control epoch when Bot decided this command (Bot#155): it rises each time a queue turn ends, is left or is paused by an owner takeover, and Bot's own halt for that change carries the new value. A device or plugin may refuse a command whose turn_epoch is lower than the newest halt's, defence in depth on top of Bot's own guarantee that nothing decided under a turn is sent after that turn's halt. Milliseconds on Bot's clock, so it keeps rising across Bot restarts. Absent from Bots before 0.213.0 and on robots without a turn queue.
@@ -270707,7 +270756,9 @@ export type BotCommand = {
     | "input"
     | "browser"
     | "desk"
-    | "ai";
+    | "ai"
+    | "headlight"
+    | "setting";
   value?: {};
   ms?: number;
 };
@@ -343525,6 +343576,10 @@ export interface UiSurface {
         [k: string]: unknown | undefined;
       } & {
         [k: string]: unknown | undefined;
+      } & {
+        [k: string]: unknown | undefined;
+      } & {
+        [k: string]: unknown | undefined;
       };
       /**
        * What this part shows, in the robot manifest's terms: the telemetry key, its fields, unit, range and source.
@@ -344165,6 +344220,10 @@ export interface UiSurface {
        * What pressing or moving this part sends, in the robot manifest's terms (bot.robot-manifest@1, 0.418.0): kind and class, the value's ranges, lifetime, delivery window, release and rate. OpenVibe AI reads it when it suggests a layout or writes a control; it grants nothing: the product's gate checks every command.
        */
       command?: {
+        [k: string]: unknown | undefined;
+      } & {
+        [k: string]: unknown | undefined;
+      } & {
         [k: string]: unknown | undefined;
       } & {
         [k: string]: unknown | undefined;
