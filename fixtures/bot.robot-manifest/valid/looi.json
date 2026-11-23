@@ -2,9 +2,9 @@
   "id": "looi",
   "name": "LOOI",
   "by": "maticus",
-  "version": "1.0.0",
-  "frozen": false,
-  "description": "LOOI through the P7 tray (Maticus's driver), from the tray's command list of 2026-11-12; frozen once he has checked it.",
+  "version": "1.1.0",
+  "frozen": true,
+  "description": "LOOI through Maticus's phone bridge (com.looi.bridge 0.2.17): 1.0.0's drive, head and headlights, the robot's settings as requests the phone checks, and the phone's report of what is in effect. Frozen with Maticus on 2026-11-23.",
   "commands": [
     {
       "kind": "drive",
@@ -64,6 +64,139 @@
       "latched": true,
       "confirm": "p7_headlight",
       "control": "toggle"
+    },
+    {
+      "kind": "setting",
+      "name": "mode",
+      "class": "state",
+      "label": "Mode",
+      "value": {
+        "name": [
+          "mode"
+        ],
+        "value": [
+          "drive_and_head",
+          "camera_only"
+        ]
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 1000
+      },
+      "release": "none",
+      "control": "choice",
+      "options": [
+        "drive_and_head",
+        "camera_only"
+      ],
+      "latched": true,
+      "confirm": "looi_bridge"
+    },
+    {
+      "kind": "setting",
+      "name": "speed_stage",
+      "class": "state",
+      "label": "Speed",
+      "value": {
+        "name": [
+          "speed_stage"
+        ],
+        "value": "integer"
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 1000
+      },
+      "release": "none",
+      "control": "choice",
+      "options": [
+        24,
+        32,
+        48,
+        69,
+        96,
+        127
+      ],
+      "latched": true,
+      "confirm": "looi_bridge"
+    },
+    {
+      "kind": "setting",
+      "name": "head_speed",
+      "class": "state",
+      "label": "Head speed",
+      "value": {
+        "name": [
+          "head_speed"
+        ],
+        "value": [
+          "gentle",
+          "medium",
+          "fast",
+          "max"
+        ]
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 1000
+      },
+      "release": "none",
+      "control": "choice",
+      "options": [
+        "gentle",
+        "medium",
+        "fast",
+        "max"
+      ],
+      "latched": true,
+      "confirm": "looi_bridge"
+    },
+    {
+      "kind": "setting",
+      "name": "yaw_limit",
+      "class": "state",
+      "label": "Spin limit",
+      "value": {
+        "name": [
+          "yaw_limit"
+        ],
+        "value": "string"
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 1000
+      },
+      "release": "none",
+      "control": "choice",
+      "options": [
+        "off",
+        45,
+        90,
+        135,
+        180
+      ],
+      "latched": true,
+      "confirm": "looi_bridge",
+      "owner_only": [
+        "off"
+      ]
+    },
+    {
+      "kind": "setting",
+      "name": "yaw_center",
+      "class": "action",
+      "label": "Set center here",
+      "value": {
+        "name": [
+          "yaw_center"
+        ]
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 1000
+      },
+      "release": "none",
+      "control": "button"
     }
   ],
   "telemetry": [
@@ -158,10 +291,48 @@
         "center": [
           0,
           255
+        ],
+        "value": [
+          0,
+          255
         ]
       },
       "source": "push",
       "control": "readout"
+    },
+    {
+      "key": "looi_bridge",
+      "label": "Robot",
+      "fields": {
+        "armed": "boolean",
+        "operators_allowed": "boolean",
+        "stop_latched": "boolean",
+        "ble": "string",
+        "mode": "string",
+        "speed_stage": "string",
+        "head_speed": "string",
+        "yaw_limit": "string",
+        "yaw_from_center": [
+          -180,
+          180
+        ],
+        "yaw_center_set": "boolean",
+        "orientation": [
+          "landscape",
+          "portrait"
+        ]
+      },
+      "optional": [
+        "head_speed",
+        "yaw_limit",
+        "yaw_from_center",
+        "yaw_center_set",
+        "stop_latched",
+        "ble",
+        "orientation"
+      ],
+      "source": "push",
+      "control": "badge"
     }
   ]
 }

@@ -116,7 +116,11 @@
               "ptz",
               "say",
               "display",
-              "halt"
+              "halt",
+              "button",
+              "point",
+              "headlight",
+              "setting"
             ]
           }
         },
@@ -133,6 +137,65 @@
           "minLength": 3,
           "maxLength": 40,
           "description": "The call word the owner chose (\"hey vibe\" unless they chose another); sent with voice on."
+        },
+        "role_caps": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "turn": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "max_speed": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "A share of the robot's own limits: Bot already scales these drivers' commands by it."
+                },
+                "settings": {
+                  "type": "object",
+                  "maxProperties": 16,
+                  "propertyNames": {
+                    "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                  },
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "integer"
+                    ]
+                  },
+                  "description": "The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it."
+                }
+              }
+            },
+            "guest": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "max_speed": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "A share of the robot's own limits: Bot already scales these drivers' commands by it."
+                },
+                "settings": {
+                  "type": "object",
+                  "maxProperties": 16,
+                  "propertyNames": {
+                    "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                  },
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "integer"
+                    ]
+                  },
+                  "description": "The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it."
+                }
+              }
+            }
+          },
+          "description": "Caps the owner set for whoever holds a turn (operator.turn true) and for guests (a gst_ subject) (0.454.0). Absent: none."
         }
       }
     },
@@ -186,7 +249,9 @@
             "probe",
             "input",
             "browser",
-            "screen_stream"
+            "screen_stream",
+            "headlight",
+            "setting"
           ]
         },
         "value": {
@@ -212,6 +277,15 @@
             },
             "role": {
               "type": "string"
+            },
+            "via": {
+              "type": "string",
+              "pattern": "^[a-z]{1,16}$",
+              "description": "The role Bot decided, where the profile names it otherwise for its driver (queue for a turn holder sent as operator)."
+            },
+            "turn": {
+              "type": "boolean",
+              "description": "The command comes from whoever holds the robot's turn."
             }
           }
         },
@@ -312,7 +386,7 @@
       }
     },
     {
-      "description": "Server to device: a refused frame (bot.not_paired, bot.bad_frame, \u2026).",
+      "description": "Server to device: a refused frame (bot.not_paired, bot.bad_frame, …).",
       "type": "object",
       "required": [
         "v",
@@ -873,7 +947,7 @@
       }
     },
     {
-      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, local_stop, expired, \u2026).",
+      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, local_stop, expired, …).",
       "type": "object",
       "required": [
         "v",
@@ -1133,7 +1207,7 @@
       }
     },
     {
-      "description": "Device to server (Vibe by voice, consumer plan \u00a78): the person said the machine's call word, and this is what they asked after it, transcribed on the machine itself (nothing leaves it before the call word). OpenVibe.Bot hands it to Vibe as the machine's owner, only when the owner turned voice on for the machine (config `voice`), and answers with voice_answer frames carrying the same id.",
+      "description": "Device to server (Vibe by voice, consumer plan §8): the person said the machine's call word, and this is what they asked after it, transcribed on the machine itself (nothing leaves it before the call word). OpenVibe.Bot hands it to Vibe as the machine's owner, only when the owner turned voice on for the machine (config `voice`), and answers with voice_answer frames carrying the same id.",
       "type": "object",
       "required": [
         "v",

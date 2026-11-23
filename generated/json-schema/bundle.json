@@ -84249,7 +84249,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/robot-manifest.v1.json",
         "title": "BotRobotManifest",
-        "description": "bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses.",
+        "description": "bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses. A setting (0.454.0) is a command of kind setting with its name, the options it takes (control choice) and the ones that are the owner's alone; the robot checks it and reports what is in effect in a reading.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -84386,12 +84386,12 @@
               "kind": {
                 "type": "string",
                 "pattern": "^[a-z][a-z0-9_]{0,31}$",
-                "description": "The command kind on the wire (drive, actuator, headlight, ...)."
+                "description": "The command kind on the wire (drive, actuator, headlight, setting, ...)."
               },
               "name": {
                 "type": "string",
                 "pattern": "^[a-z][a-z0-9_]{0,31}$",
-                "description": "For a kind that carries a name (actuator): which one, e.g. head."
+                "description": "For a kind that carries a name (actuator, setting): which one, e.g. head or speed_stage."
               },
               "class": {
                 "enum": [
@@ -84455,9 +84455,46 @@
                   "slider",
                   "toggle",
                   "button",
-                  "pad"
+                  "pad",
+                  "choice"
                 ],
-                "description": "The control the panel draws for it."
+                "description": "The control the panel draws for it (choice: a row of the options, 0.454.0)."
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,31}$"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "description": "A setting's values, in the order the panel shows them (0.454.0): LOOI's speed stage 24 … 127, its mode drive_and_head or camera_only."
+              },
+              "owner_only": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,31}$"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "description": "The options only the robot's owner may pick (LOOI's spin limit off); Bot refuses them to anyone else (bot.owner_only)."
               }
             },
             "allOf": [
@@ -84495,6 +84532,32 @@
                 "then": {
                   "required": [
                     "name"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "setting"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "name"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "owner_only"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "options"
                   ]
                 }
               }
@@ -84698,7 +84761,11 @@
                     "ptz",
                     "say",
                     "display",
-                    "halt"
+                    "halt",
+                    "button",
+                    "point",
+                    "headlight",
+                    "setting"
                   ]
                 }
               },
@@ -84715,6 +84782,65 @@
                 "minLength": 3,
                 "maxLength": 40,
                 "description": "The call word the owner chose (\"hey vibe\" unless they chose another); sent with voice on."
+              },
+              "role_caps": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "turn": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "max_speed": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "A share of the robot's own limits: Bot already scales these drivers' commands by it."
+                      },
+                      "settings": {
+                        "type": "object",
+                        "maxProperties": 16,
+                        "propertyNames": {
+                          "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                        },
+                        "additionalProperties": {
+                          "type": [
+                            "string",
+                            "integer"
+                          ]
+                        },
+                        "description": "The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it."
+                      }
+                    }
+                  },
+                  "guest": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "max_speed": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "A share of the robot's own limits: Bot already scales these drivers' commands by it."
+                      },
+                      "settings": {
+                        "type": "object",
+                        "maxProperties": 16,
+                        "propertyNames": {
+                          "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                        },
+                        "additionalProperties": {
+                          "type": [
+                            "string",
+                            "integer"
+                          ]
+                        },
+                        "description": "The highest option of a setting these drivers may drive at (LOOI: speed_stage 48): the robot clamps them to it."
+                      }
+                    }
+                  }
+                },
+                "description": "Caps the owner set for whoever holds a turn (operator.turn true) and for guests (a gst_ subject) (0.454.0). Absent: none."
               }
             }
           },
@@ -84768,7 +84894,9 @@
                   "probe",
                   "input",
                   "browser",
-                  "screen_stream"
+                  "screen_stream",
+                  "headlight",
+                  "setting"
                 ]
               },
               "value": {
@@ -84794,6 +84922,15 @@
                   },
                   "role": {
                     "type": "string"
+                  },
+                  "via": {
+                    "type": "string",
+                    "pattern": "^[a-z]{1,16}$",
+                    "description": "The role Bot decided, where the profile names it otherwise for its driver (queue for a turn holder sent as operator)."
+                  },
+                  "turn": {
+                    "type": "boolean",
+                    "description": "The command comes from whoever holds the robot's turn."
                   }
                 }
               },
@@ -85819,7 +85956,9 @@
               "input",
               "browser",
               "desk",
-              "ai"
+              "ai",
+              "headlight",
+              "setting"
             ]
           },
           "value": {

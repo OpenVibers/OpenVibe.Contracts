@@ -1,0 +1,21 @@
+{
+  "id": "looi",
+  "name": "LOOI",
+  "by": "maticus",
+  "version": "1.1.0",
+  "commands": [
+    {
+      "kind": "setting",
+      "class": "state",
+      "value": {
+        "value": "integer"
+      },
+      "options": [
+        24,
+        48
+      ],
+      "release": "none",
+      "control": "choice"
+    }
+  ]
+}
