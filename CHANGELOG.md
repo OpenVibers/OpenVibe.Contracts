@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.457.0 - 2026-11-28
+
+- **A failed job says why** (`platform.job-frame@1` `job_exit.detail`, `bot.job-dispatch-result@1` `fault_detail`, both
+  optional): when the worker could not run a job (no runtime, a sandbox that would not start, a missing artifact) the
+  Link says why in plain words, Bot keeps it and Run passes it on as the job's `error.detail`. Until now a job that never
+  ran ended `failed` with nothing else, so Codes showed a person no reason and moved their task to another model
+  (11-21: a Claude Code try on the person's own machine).
+
 ## 0.456.0 - 2026-11-28
 
 - **Teach as an API** (`actor.agent.manage`, plan §AD.33 and AD.39 item 11): `POST /api/v1/me/agents/:id/lessons`

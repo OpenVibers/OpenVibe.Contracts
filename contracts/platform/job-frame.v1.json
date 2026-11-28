@@ -189,6 +189,12 @@
         "result": {
           "description": "The artifact's declared output (any JSON); null unless reason is `exited` with code 0"
         },
+        "detail": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Why the worker could not run it, in plain words for the person (\"claude is not installed on this machine\", \"it could not run confined: …\"); only on `failed`, never a secret, token or file contents."
+        },
         "usage": {
           "type": "object",
           "additionalProperties": false,
