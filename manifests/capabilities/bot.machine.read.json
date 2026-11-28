@@ -1,0 +1,23 @@
+{
+  "id": "bot.machine.read",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Read a person's own machines for them, and nothing else (Contracts 0.455.0, plan AD.37 spare usage): GET /api/v1/machines and GET /api/v1/machines/:id through OpenVibe.Bot, with a Network service token naming that person in X-OV-Subject. OpenVibe.Codes holds it so its spare-usage planner refreshes what each of the person's coding agents has left in the background, without the person's own token. Bot answers only machines whose owner is the named person (another person's is 404), only for the services it names for this capability, and changes nothing: a rename, roles or a revoke stays bot.machine.manage. Never grantable to apps.",
+  "permissions": [
+    "bot:machine:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-machine",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/machines",
+    "GET /api/v1/machines/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bot.machine-manage-result@1"
+}
