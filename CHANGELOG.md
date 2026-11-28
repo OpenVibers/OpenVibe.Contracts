@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.455.0 - 2026-11-28
+
+- **`bot.machine.read`** (first-party, sensitive): a service reads a person's own machines for them, read-only
+  (GET /api/v1/machines and /machines/:id on OpenVibe.Bot, the person named in X-OV-Subject). OpenVibe.Codes holds it so
+  its spare-usage planner (plan AD.37) refreshes what each coding agent has left in the background, without the
+  person's token; a rename, roles or a revoke stays `bot.machine.manage`. Never grantable to apps.
+
 ## 0.454.0 - 2026-11-23
 
 **LOOI's manifest 1.1.0, frozen with Maticus** (his phone bridge 0.2.17): 1.0.0's drive, head and headlights, the

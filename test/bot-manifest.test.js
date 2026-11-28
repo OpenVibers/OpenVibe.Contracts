@@ -15,7 +15,8 @@ const c = require('..');
 // bot.machine.manage: the machines hub (0.258.0, plan L34): Network fronts Bot for a person and for the apps that
 // person consented to; Bot stays the authority and checks the machine is that person's own.
 // bot.machine.watch_link: the owner's agent asks for a link that shows the desk it works on, inside a chat (plan L55).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.machine.manage', 'bot.machine.watch_link', 'bot.machine.relay', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
+// bot.machine.read: a service reads a person's own machines for them, read-only (0.455.0; Codes' spare-usage planner).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.machine.manage', 'bot.machine.read', 'bot.machine.watch_link', 'bot.machine.relay', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.command.refused', 'bot.turn.started', 'bot.turn.ended'];
 
 const bot = c.services.get('bot');

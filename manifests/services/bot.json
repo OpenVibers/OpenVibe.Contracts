@@ -39,6 +39,7 @@
     "bot.resource.control",
     "bot.desk.session",
     "bot.machine.manage",
+    "bot.machine.read",
     "bot.machine.watch_link",
     "bot.machine.relay"
   ],
