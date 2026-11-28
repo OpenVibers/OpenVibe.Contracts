@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.456.0 - 2026-11-28
+
+- **Teach as an API** (`actor.agent.manage`, plan §AD.33 and AD.39 item 11): `POST /api/v1/me/agents/:id/lessons`
+  starts a lesson for one of the person's agents, shown on a desk (`how: show`, `kind: browser|desktop`) or told in
+  words (`how: words`), then practised (`practice: until|once|off`), answered 201 with the lesson, its task and the
+  page where the person shows it; `GET /api/v1/me/agents/:id/lessons` lists the agent's lessons.
+
 ## 0.455.0 - 2026-11-28
 
 - **`bot.machine.read`** (first-party, sensitive): a service reads a person's own machines for them, read-only
