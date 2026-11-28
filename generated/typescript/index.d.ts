@@ -219370,6 +219370,10 @@ export type JobFrame =
       result: {
         [k: string]: unknown | undefined;
       };
+      /**
+       * Why the worker could not run it, in plain words for the person ("claude is not installed on this machine", "it could not run confined: …"); only on `failed`, never a secret, token or file contents.
+       */
+      detail?: string;
       usage: {
         /**
          * When the job's process started, worker's wall clock, Unix ms
@@ -270864,6 +270868,10 @@ export type BotJobDispatchResult =
          */
         fault_code: string | null;
         /**
+         * The Link's job_exit detail when the worker could not run the job: why, in plain words; null otherwise. Absent on rows from before 0.457.0.
+         */
+        fault_detail?: string | null;
+        /**
          * First time the `job` frame went out (epoch ms); null while queued and never sent.
          */
         sent_at: number | null;
@@ -270953,6 +270961,10 @@ export type BotJobDispatchResult =
          * The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
          */
         fault_code: string | null;
+        /**
+         * The Link's job_exit detail when the worker could not run the job: why, in plain words; null otherwise. Absent on rows from before 0.457.0.
+         */
+        fault_detail?: string | null;
         /**
          * First time the `job` frame went out (epoch ms); null while queued and never sent.
          */

@@ -93,6 +93,14 @@
           "maxLength": 64,
           "description": "The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
         },
+        "fault_detail": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500,
+          "description": "The Link's job_exit detail when the worker could not run the job: why, in plain words; null otherwise. Absent on rows from before 0.457.0."
+        },
         "sent_at": {
           "type": [
             "integer",
