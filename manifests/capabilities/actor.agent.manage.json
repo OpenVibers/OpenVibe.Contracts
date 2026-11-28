@@ -28,6 +28,8 @@
     "DELETE /api/v1/me/agents/:id/memory/:mem",
     "DELETE /api/v1/me/agents/:id/memory",
     "GET /api/v1/me/agents/:id/suggestions",
+    "POST /api/v1/me/agents/:id/lessons",
+    "GET /api/v1/me/agents/:id/lessons",
     "POST /api/v1/me/agents/:id/suggestions/:pid/:action",
     "POST /api/v1/agents",
     "GET /api/v1/agents/:id",
